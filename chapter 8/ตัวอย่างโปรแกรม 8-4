@@ -1,0 +1,31 @@
+using UnityEngine;
+
+public class CameraController : MonoBehaviour
+{
+    // ความเร็วในการหมุนของกล้อง
+    public float rotationSpeed = 300f; 
+
+    // ************ การควบคุมพฤติกรรมในทุกเฟรม ************
+    private void Update()
+    {
+// 1. การรับอินพุต: ตรวจสอบการกดปุ่มของผู้ใช้ในเฟรมปัจจุบัน
+// GetAxisRaw("Mouse X") จะส่งคืนค่าระหว่าง -1 ถึง 1 ตามการเคลื่อนที่ของเมาส์
+        float mouseXInput = Input.GetAxisRaw("Mouse X");
+
+// 2. การคำนวณการเปลี่ยนแปลง: คำนวณปริมาณการหมุน
+        float rotationAmount = mouseXInput * rotationSpeed * Time.deltaTime;
+
+// 3. การประยุกต์ใช้การเปลี่ยนแปลง
+// ใช้ Time.deltaTime เพื่อให้การหมุนไม่ขึ้นอยู่กับ Frame Rate
+// หมุน Game Object ที่สคริปต์นี้แนบอยู่รอบแกน Y (การหมุนในแนวนอน)
+        transform.Rotate(Vector3.up, rotationAmount, Space.World);
+
+// 4. ตัวอย่างการใช้ตรรกะเกมทั่วไป (เช่น คูลดาวน์)
+        // if (canShoot) { 
+        //    if (Input.GetButtonDown("Fire")) {
+        //        Shoot();
+        //        StartCooldown();
+        //    }
+        // }
+    }
+}
