@@ -1,0 +1,21 @@
+using UnityEngine;
+
+public class GlobalScopeExample : MonoBehaviour
+{
+    public static int score = 0; // ตัวแปรระดับสากล (Static Field)
+
+    void Start()
+    {
+        score = 50;
+        Debug.Log("ค่าคะแนนเริ่มต้น: " + score);
+    }
+}
+
+public class AnotherClass : MonoBehaviour
+{
+    void Update()
+    {
+        // เข้าถึงตัวแปรจากคลาสอื่นโดยไม่ต้องสร้างอ็อบเจ็กต์
+        Debug.Log("คะแนนปัจจุบัน: " + GlobalScopeExample.score);
+    }
+}
