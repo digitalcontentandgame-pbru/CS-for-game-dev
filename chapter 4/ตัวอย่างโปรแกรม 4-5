@@ -1,0 +1,41 @@
+using UnityEngine; 
+
+public class ScoreLevelChecker : MonoBehaviour
+{
+    // ตัวแปร public เพื่อให้สามารถกำหนดค่า Score ได้จาก Unity Inspector
+    [Tooltip("กรอกค่าคะแนนที่ต้องการตรวจสอบระดับ")]
+    public float score = 35.0f; // กำหนดค่าเริ่มต้นตามโค้ดเดิม
+
+    void Start()
+    {
+        CheckScoreLevel();
+    }
+
+    public void CheckScoreLevel()
+    {
+        // ใช้โครงสร้าง if-else if-else เพื่อตรวจสอบระดับคะแนน
+        if (score < 10) 
+        {
+            // ใช้ Debug.Log แทน Console.WriteLine
+            Debug.Log($"Score {score}: Level 0");
+        } 
+        else if (score < 20) 
+        {
+            Debug.Log($"Score {score}: Level 1");
+        } 
+        else if (score < 30) 
+        {
+            Debug.Log($"Score {score}: Level 2");
+        } 
+        else if (score < 40) 
+        {
+            Debug.Log($"Score {score}: Level 3");
+        } 
+
+
+        else 
+        {
+            Debug.Log($"Score {score}: Level 4");
+        }
+    }
+}
