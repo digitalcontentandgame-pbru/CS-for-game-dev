@@ -1,0 +1,37 @@
+public class Projectile
+{
+    public int ID;
+    public float LifeTime;
+
+    public Projectile(int id, float life)
+    {
+        ID = id;
+        LifeTime = life;
+    }
+}
+
+public class ProjectileManager
+{
+    private List<Projectile> projectiles = new List<Projectile>();
+
+    public void SpawnProjectile(int id)
+    {
+        projectiles.Add(new Projectile(id, 3f));
+    }
+
+    public void Update(float deltaTime)
+    {
+        for (int i = projectiles.Count - 1; i >= 0; i--)
+        {
+            projectiles[i].LifeTime -= deltaTime;
+
+            if (projectiles[i].LifeTime <= 0)
+                projectiles.RemoveAt(i); // ลบอย่างปลอดภัย
+        }
+    }
+
+    public void PrintStatus()
+    {
+        Console.WriteLine($"Active: {projectiles.Count}");
+    }
+}
