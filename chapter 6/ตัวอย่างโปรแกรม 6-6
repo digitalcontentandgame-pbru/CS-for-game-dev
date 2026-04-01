@@ -1,0 +1,28 @@
+using UnityEngine;
+
+public class CalculateAreaInteger : MonoBehaviour
+{
+// ตัวแปร public int เพื่อรับค่าความกว้างและความสูงจาก Unity Inspector
+    [Tooltip("ความกว้างของสี่เหลี่ยมผืนผ้า (จำนวนเต็ม)")]
+    public int rectangleWidth = 5; 
+    [Tooltip("ความสูงของสี่เหลี่ยมผืนผ้า (จำนวนเต็ม)")]
+    public int rectangleHeight = 10; 
+
+    void Start()
+    {
+        // 1. เรียกใช้เมท็อด CalculateArea
+        int result = CalculateArea(rectangleWidth, 
+                                   rectangleHeight);
+        
+        // 2. แสดงผลลัพธ์ใน Unity Console
+        Debug.Log("พื้นที่สี่เหลี่ยมผืนผ้าคือ: " + result); 
+    }
+
+    // เมท็อด CalculateArea: คำนวณพื้นที่สี่เหลี่ยมผืนผ้าโดยใช้จำนวนเต็ม
+    private int CalculateArea(int width, int height)
+    {
+        int area = width * height;
+        // ส่งค่า area กลับไปยังเมท็อดที่เรียกใช้
+        return area; 
+    }
+}
