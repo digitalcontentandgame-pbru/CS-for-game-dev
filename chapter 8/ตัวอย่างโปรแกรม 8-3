@@ -1,0 +1,45 @@
+using UnityEngine;
+
+public class Projectile : MonoBehaviour
+{
+    // ตัวแปรที่ถูกตั้งค่าจาก WeaponController
+    [HideInInspector] 
+    public float speed; 
+
+    private Rigidbody rb;
+
+    // เราใช้ Awake() เพื่อรับ Rigidbody เพื่อความปลอดภัย
+    private void Awake()
+    {
+        rb = GetComponent<Rigidbody>();
+    }
+
+    // ************ การควบคุมพฤติกรรมเมื่อเริ่มต้น ************
+    private void Start()
+    {
+        // ใน Start() เรามั่นใจได้ว่า:
+        // 1. Rigidbody (rb) ได้รับการอ้างอิงจาก Awake() เรียบร้อยแล้ว
+        // 2. ตัวแปร 'speed' ได้รับการกำหนดค่าจาก WeaponController เรียบร้อยแล้ว
+        
+        if (rb != null)
+        {
+            // เริ่มต้นพฤติกรรมการเคลื่อนที่ของกระสุนทันที
+            rb.velocity = transform.forward * speed;
+        }
+        else
+        {
+// หากไม่มี Rigidbody ให้ใช้ Transform ในการเคลื่อนที่ 
+// (สำหรับกรณี 2D หรือ 3D แบบไม่ใช้ฟิสิกส์)
+            // (ตรรกะอื่น ๆ ที่เหมาะกับการเริ่มต้น)
+            Debug.LogWarning(
+"Rigidbody missing, projectile moving via Transform.Start()"
+            );
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        // ตรรกะการทำลายเมื่อชน
+        Destroy(gameObject);
+    }
+}
