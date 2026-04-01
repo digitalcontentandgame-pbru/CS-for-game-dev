@@ -1,0 +1,13 @@
+public class PlayerData
+{
+    public string Name;
+    public int Score;
+    public int Level;
+
+    public PlayerData(string name, int score, int level)
+    {
+        Name = name;
+        Score = score;
+        Level = level;
+    }
+}
