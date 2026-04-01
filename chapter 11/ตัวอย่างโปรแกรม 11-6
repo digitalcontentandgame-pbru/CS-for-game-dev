@@ -1,0 +1,19 @@
+public class Player : Character
+{
+    public string ClassType { get; private set; }
+
+    public Player(string name, int maxHP, string classType)
+        : base(name, maxHP)
+    {
+        ClassType = classType;
+    }
+
+    public override void Attack(Character target)
+    {
+        int damage = UnityEngine.Random.Range(5, 15);
+        target.HP -= damage;
+        UnityEngine.Debug.Log(
+$"{Name} โจมตีศัตรูแบบ Player สร้างความเสียหาย {damage}"
+        );
+    }
+}
