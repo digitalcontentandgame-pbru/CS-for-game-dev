@@ -1,0 +1,3 @@
+Dictionary<string, int> scores = new Dictionary<string, int>();
+scores["Alice"] = 100;
+scores["Bob"] = 150;
