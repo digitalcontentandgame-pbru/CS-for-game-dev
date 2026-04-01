@@ -1,0 +1,155 @@
+using UnityEngine;
+using System.Collections.Generic;
+using System.Linq; // จำเป็นสำหรับการใช้ LINQ
+
+// โครงสร้างข้อมูล 1: Item (Blueprint ของไอเทม)
+public class Item
+{
+    public int ItemID { get; private set; }
+    public string Name { get; private set; }
+    public string Quality { get; private set; } 
+           // เช่น "Common", "Rare", "Epic"
+    public int SellPrice { get; private set; }
+
+    public Item(int id, string name, string quality, int price)
+    {
+        this.ItemID = id;
+        this.Name = name;
+        this.Quality = quality;
+        this.SellPrice = price;
+    }
+    
+    public override string ToString()
+    {
+        return 
+$"[ID:{ItemID} | {Name} ({Quality}) | Price: {SellPrice}]";
+    }
+}
+
+// คลาสจัดการสินค้าคงคลัง (Inventory Management System)
+public class InventoryManager : MonoBehaviour
+{
+    // List: ใช้เก็บไอเทมทั้งหมดในคลัง (รวมไอเทมที่ซ้ำกัน)
+    // การใช้ List เหมาะกับการทำซ้ำเพื่อแสดงผลทีละรายการ
+    private List<Item> inventoryList = new List<Item>();
+    
+    // Dictionary: ใช้สำหรับนับจำนวนไอเทมแต่ละชนิดได้อย่างรวดเร็ว
+    // Key: ItemID, Value: จำนวนไอเทม
+    private Dictionary<int, int> itemCounts = 
+           new Dictionary<int, int>();
+
+    void Start()
+    {
+        Debug.Log("--- เริ่มต้นระบบคลังไอเทม ---");
+
+
+
+        // 1. สร้างและเพิ่มไอเทม (Objects)
+        AddItemToInventory(
+           new Item(101, "Iron Sword", "Common", 50));
+        AddItemToInventory(
+           new Item(205, "Healing Potion", "Common", 10));
+        AddItemToInventory(
+           new Item(300, "Dragon Scale", "Epic", 500));
+        AddItemToInventory(
+           new Item(205, "Healing Potion", "Common", 10)); // ไอเทมซ้ำ
+        AddItemToInventory(
+           new Item(102, "Elven Bow", "Rare", 150));
+        AddItemToInventory(
+           new Item(300, "Dragon Scale", "Epic", 500)); // ไอเทมซ้ำ
+        AddItemToInventory(
+           new Item(101, "Iron Sword", "Common", 50)); // ไอเทมซ้ำ
+
+        Debug.Log("\n--- 2. รายงานสถานะคลัง (Dictionary Count) ---");
+        PrintItemCounts();
+
+        Debug.Log("\n--- 3. การใช้งาน LINQ Query ---");
+        
+        // 3.1 LINQ Where (การกรอง): ค้นหาไอเทมระดับ "Epic"
+        var epicItems = inventoryList
+            .Where(item => item.Quality == "Epic")
+            .ToList(); // แปลงผลลัพธ์กลับเป็น List
+
+        Debug.Log(
+$"[LINQ 3.1] พบไอเทมระดับ Epic จำนวน: {epicItems.Count} ชิ้น"
+           );
+        PrintList(epicItems);
+
+
+        // 3.2 LINQ Select (การฉายภาพ): ดึงเฉพาะชื่อและราคา
+        var itemNamesAndPrices = inventoryList
+// สร้าง Anonymous Type
+            .Select(item => new { item.Name, item.SellPrice }) 
+            .Distinct() // ลบคู่ซ้ำกัน
+            .ToList();
+
+
+
+        Debug.Log($"\n[LINQ 3.2] ชื่อไอเทมและราคาที่ไม่ซ้ำกัน:");
+        foreach (var item in itemNamesAndPrices)
+        {
+            Debug.Log($" - {item.Name} ราคา: {item.SellPrice}");
+        }
+
+        // 3.3 LINQ OrderBy (การจัดเรียง): จัดเรียงตามราคาขายจากมากไปน้อย
+        var sortedByPrice = inventoryList
+// ใช้ DistinctBy เพื่อจัดเรียงไอเทมที่ไม่ซ้ำกันเท่านั้น
+            .DistinctBy(item => item.ItemID) 
+            .OrderByDescending(item => item.SellPrice)
+            .ToList();
+
+        Debug.Log("\n[LINQ 3.3] ไอเทมจัดเรียงตามราคาขาย (มากไปน้อย):");
+        PrintList(sortedByPrice);
+        
+        // 3.4 LINQ Sum (การรวมกลุ่ม): คำนวณราคารวมทั้งหมดของไอเทมในคลัง
+        int totalValue = inventoryList.Sum(item => item.SellPrice);
+        Debug.Log(
+$"\n[LINQ 3.4] มูลค่ารวมของไอเทมทั้งหมดในคลัง: {totalValue} Gold"
+        );
+    }
+
+    // เพิ่มไอเทมเข้าไปใน List และอัปเดต Dictionary นับจำนวน
+    public void AddItemToInventory(Item item)
+    {
+        inventoryList.Add(item);
+        
+        if (itemCounts.ContainsKey(item.ItemID))
+        {
+            itemCounts[item.ItemID]++; // เพิ่มจำนวน
+        }
+        else
+        {
+            itemCounts.Add(item.ItemID, 1); // เพิ่มคีย์ใหม่
+        }
+    }
+
+
+
+
+
+    // แสดงจำนวนไอเทมทั้งหมดที่นับโดย Dictionary
+    private void PrintItemCounts()
+    {
+        Debug.Log($"จำนวนไอเทมทั้งหมดในคลัง: {inventoryList.Count} ชิ้น");
+        foreach (var pair in itemCounts)
+        {
+            // ใช้ LINQ เพื่อค้นหาชื่อไอเทมจาก ItemID
+            string itemName = inventoryList
+                .First(item => item.ItemID == pair.Key)
+                .Name;
+                
+            Debug.Log(
+$"- ID {pair.Key}: {itemName} x {pair.Value} ชิ้น"
+                 );
+        }
+    }
+    
+    // เมท็อดช่วยในการแสดงผล List ของ Item
+    private void PrintList(List<Item> items)
+    {
+        foreach (var item in items)
+        {
+            Debug.Log($" - {item.ToString()}");
+        }
+    }
+}
