@@ -1,0 +1,55 @@
+using UnityEngine;
+
+public class FibonacciRecursion : MonoBehaviour
+{
+    // ตัวแปร public เพื่อรับค่า N จาก Unity Inspector (ตำแหน่งในลำดับ)
+    [Tooltip(
+"ตำแหน่ง N ในลำดับ Fibonacci (N ต้องไม่เกิน 40 เพื่อหลีกเลี่ยงความล่าช้า)"
+      )]
+    public int positionN = 10;
+
+    void Start()
+    {
+        if (positionN < 0)
+        {
+            Debug.LogError(
+"ลำดับ Fibonacci ถูกกำหนดสำหรับ N >= 0 เท่านั้น"
+                 );
+            return;
+        }
+        if (positionN > 40)
+        {
+            Debug.LogWarning(
+"การคำนวณค่า N ที่สูงมากอาจใช้เวลานานมาก (Inefficient Recursion)"
+            );
+        }
+
+        Debug.Log(
+$"--- เริ่มคำนวณ Fibonacci ตำแหน่งที่ {positionN} ---"
+        );
+        
+        // เรียกใช้เมท็อด Fibonacci
+        int result = Fibonacci(positionN);
+        
+        Debug.Log(
+$"ผลลัพธ์ของ Fibonacci({positionN}) คือ: {result}"
+        );
+    }
+
+// เมท็อด Fibonacci: คำนวณค่าในลำดับโดยใช้ Recursion
+    private int Fibonacci(int n)
+    {
+        // เงื่อนไขการยุติ (Base Case): 
+        // F(0) = 0 และ F(1) = 1
+        if (n <= 1)
+        {
+            return n;
+        }
+        else
+        {
+// การเรียกตัวเอง (Recursive Step): F(n) = F(n-1) + F(n-2)
+// เมท็อดนี้จะเรียกตัวเองสองครั้งในแต่ละรอบ
+            return Fibonacci(n - 1) + Fibonacci(n - 2);
+        }
+    }
+}
