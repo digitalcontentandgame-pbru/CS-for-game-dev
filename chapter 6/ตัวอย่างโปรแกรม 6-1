@@ -1,0 +1,42 @@
+using UnityEngine;
+using System; // นำเข้า System เพื่อใช้ Math
+
+public class MethodUsageExample : MonoBehaviour
+{
+    // ตัวแปร public สำหรับใช้เป็นพารามิเตอร์ในการเรียกเมท็อด
+    public double rectangleWidth = 5.0;
+    public double rectangleHeight = 10.0;
+    public string userName = "John Doe";
+
+    // เมท็อด Start() จะถูกเรียกครั้งแรกเมื่อสคริปต์เริ่มต้นทำงาน
+    void Start()
+    {
+        // 1. เรียกใช้เมท็อด CalculateArea ที่มีค่าส่งกลับ (double)
+        double area = CalculateArea(rectangleWidth,
+                                    rectangleHeight);
+        
+// แสดงผลลัพธ์ด้วยทศนิยม 2 ตำแหน่ง
+        Debug.Log($"พื้นที่สี่เหลี่ยมผืนผ้าคือ {area:F2}"); 
+
+        // 2. เรียกใช้เมท็อด Greet ที่ไม่มีค่าส่งกลับ (void)
+        Greet(userName);
+    }
+
+// เมท็อด CalculateArea: คำนวณพื้นที่สี่เหลี่ยมผืนผ้าและส่งค่ากลับ
+// <param name="width">ความกว้างของสี่เหลี่ยม (double)</param>
+// <param name="height">ความสูงของสี่เหลี่ยม (double)</param>
+// <returns>พื้นที่สี่เหลี่ยมผืนผ้า (double)</returns>
+    private double CalculateArea(double width, double height)
+    {
+        // คำนวณและส่งค่ากลับทันที
+        return width * height;
+    }
+
+// เมท็อด Greet: แสดงข้อความทักทาย, ไม่มีค่าส่งกลับ (void)
+// <param name="name">ชื่อบุคคลที่ต้องการทักทาย (string)</param>
+    private void Greet(string name)
+    {
+        // ดำเนินการแสดงผลลัพธ์โดยตรง
+        Debug.Log("สวัสดี " + name);
+    }
+}
