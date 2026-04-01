@@ -1,0 +1,28 @@
+using UnityEngine;
+
+public class ResourceCollector : MonoBehaviour
+{
+    public int currentResources = 0;
+    public const int TargetResources = 100;
+
+    public void CollectResources()
+    {
+        // เงื่อนไข: วนซ้ำตราบใดที่ทรัพยากรที่เก็บได้ยังไม่ถึงเป้าหมาย
+        while (currentResources < TargetResources)
+        {
+// สุ่มทรัพยากรที่เก็บได้
+            int gathered = Random.Range(5, 15); 
+            currentResources += gathered;
+            Debug.Log(
+$"เก็บทรัพยากรได้ {gathered} หน่วย. รวม: {currentResources}"
+            );
+
+// การป้องกัน Infinite Loop: หากเงื่อนไขไม่เปลี่ยน อาจทำให้โปรแกรมค้าง
+            if (currentResources > TargetResources * 2) 
+            {
+                break; 
+            }
+        }
+        Debug.Log("การเก็บทรัพยากรเสร็จสิ้น!");
+    }
+}
