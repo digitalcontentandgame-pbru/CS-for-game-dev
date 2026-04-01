@@ -1,0 +1,11 @@
+public class Projectile
+{
+    public float Speed { get; private set; }
+    public int Damage { get; private set; }
+
+    public Projectile(float speed, int damage)
+    {
+        Speed = speed;
+        Damage = damage;
+    }
+}
