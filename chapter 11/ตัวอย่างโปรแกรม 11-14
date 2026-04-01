@@ -1,0 +1,32 @@
+using UnityEngine;
+
+public class Slime : Creature
+{
+    public Slime(string name)
+        : base(name, maxHP: 60, baseAttack: 10, baseDefense: 2,
+               weapon: null, armor: null)
+    {
+    }
+
+    public override void Attack(Creature target)
+    {
+        int randomAttack = Random.Range(8, 15);
+        int totalDefense = target.BaseDefense +
+                           (target.Armor?.DefenseBonus ?? 0);
+
+        int damage = randomAttack - totalDefense;
+        if (damage < 1) damage = 1;
+
+        // Rogue Dodge
+        if (target is Rogue rogue && rogue.TryDodge())
+        {
+            Debug.Log($"{target.Name} หลบการโจมตีของ {Name} ได้!");
+            return;
+        }
+
+        target.HP -= damage;
+        Debug.Log(
+$"{Name} ตี {target.Name} สร้างความเสียหาย {damage}"
+        );
+    }
+}
