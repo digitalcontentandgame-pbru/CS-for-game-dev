@@ -1,0 +1,35 @@
+public class ProjectileManager : MonoBehaviour
+{
+    // เก็บรายการของ Projectile instance ที่กำลัง active
+    private List<Projectile> activeProjectiles = 
+                new List<Projectile>(); 
+
+
+
+    public void AddProjectile(Projectile newProjectile)
+    {
+        activeProjectiles.Add(newProjectile);
+    }
+
+    // เมธอดนี้ถูกเรียกเมื่อกระสุนกระทบเป้าหมายหรือหมดอายุ
+    public void OnProjectileDestroyed(Projectile projectile)
+    {
+        // การลบข้อมูล: ลบกระสุนออกจากรายการทันทีที่มันถูกทำลายในฉาก 
+        // เพื่อป้องกันการอ้างอิงถึงออบเจกต์ที่ไม่มีอยู่แล้ว (Missing Reference)
+        activeProjectiles.Remove(projectile);
+    }
+
+    // การทำลายกระสุนทั้งหมดเมื่อเกมโอเวอร์
+    public void DestroyAllProjectiles()
+    {
+        foreach (Projectile proj in activeProjectiles)
+        {
+            if (proj != null)
+            {
+                Destroy(proj.gameObject);
+            }
+        }
+        // ล้างรายการเมื่อทำลายเสร็จสิ้น
+        activeProjectiles.Clear(); 
+    }
+}
