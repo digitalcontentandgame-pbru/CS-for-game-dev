@@ -1,0 +1,79 @@
+using UnityEngine;
+using System;
+
+public class HeightStatisticsCalculator : MonoBehaviour
+{
+// ตัวแปร public array สำหรับป้อนค่าความสูง 20 ค่าจาก Unity Inspector
+    [Tooltip("กรุณาป้อนค่าความสูงที่ต้องการประมวลผล 20 ค่า")]
+    public double[] heightInputs = new double[20];
+
+    // กำหนดค่าคงที่สำหรับจำนวนรอบ (20 ครั้ง)
+    private const int LoopLimit = 20;
+
+    void Start()
+    {
+        // เรียกเมท็อดคำนวณเมื่อสคริปต์เริ่มต้น
+        CalculateStatistics();
+    }
+
+    public void CalculateStatistics()
+    {
+        // ตรวจสอบว่ามีจำนวนค่าอินพุตครบ 20 หรือไม่
+        if (heightInputs.Length < LoopLimit)
+        {
+            Debug.LogError(
+$"[X] ต้องป้อนค่าความสูงอย่างน้อย {LoopLimit} ค่า เพื่อดำเนินการต่อ"
+                 );
+            return;
+        }
+
+        // การกำหนดค่าเริ่มต้น
+        double sum = 0.0;
+// กำหนดค่า Min ด้วยค่าสูงสุดที่เป็นไปได้
+        double min = double.MaxValue; 
+// กำหนดค่า Max ด้วยค่าต่ำสุดที่เป็นไปได้
+        double max = double.MinValue; 
+        int loopCounter = 0;
+
+        Debug.Log("--- เริ่มการประมวลผลความสูง ---");
+
+
+        // โครงสร้าง while loop เพื่อวนซ้ำ 20 ครั้ง
+        while (loopCounter < LoopLimit)
+        {
+            // ดึงค่าจาก Array ใน Inspector แทนการอ่านจาก Console
+            double height = heightInputs[loopCounter];
+            
+            // 1. คำนวณผลรวม
+            sum += height;
+
+            // 2. หาค่าต่ำสุด (Min)
+            if (min > height)
+            {
+                min = height;
+            }
+
+            // 3. หาค่าสูงสุด (Max)
+            if (max < height)
+            {
+                max = height;
+            }
+            
+            // เพิ่มค่าตัวนับ
+            loopCounter++;
+        }
+
+        // 4. คำนวณค่าเฉลี่ย
+        double mean = sum / LoopLimit;
+
+// แสดงผลลัพธ์สุดท้ายใน Unity Console
+// ใช้ String Interpolation ($"...")
+// และตัวกำหนดรูปแบบ :F3 สำหรับทศนิยม 3 ตำแหน่ง
+        Debug.Log(
+            $"--- สรุปผลลัพธ์ --- \n" +
+            $"ค่าเฉลี่ย (Mean) = {mean:F3}, " +
+            $"ค่าสูงสุด (Max) = {max:F3}, " +
+            $"ค่าต่ำสุด (Min) = {min:F3}"
+        );
+    }
+}
