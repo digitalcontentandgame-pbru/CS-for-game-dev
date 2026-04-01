@@ -1,0 +1,47 @@
+using UnityEngine;
+
+public class CameraFollow : MonoBehaviour
+{
+    // กำหนดเป้าหมายที่ต้องการติดตาม (โดยทั่วไปคือ Player)
+    public Transform target;
+    
+    // ระยะห่างเริ่มต้นระหว่างกล้องกับเป้าหมาย
+    private Vector3 offset;
+
+    // ความราบรื่นของการติดตาม (ยิ่งค่าน้อยยิ่งราบรื่น)
+    public float smoothSpeed = 0.125f; 
+
+    private void Start()
+    {
+        // คำนวณระยะห่างเริ่มต้นระหว่างกล้องและเป้าหมาย
+        if (target != null)
+        {
+            offset = transform.position - target.position;
+        }
+    }
+
+    // ************ การควบคุมพฤติกรรมในขั้นตอนสุดท้าย ************
+    private void LateUpdate()
+    {
+        // ใน LateUpdate() เรามั่นใจได้ว่า:
+        // 1. target (ผู้เล่น) ได้คำนวณการเคลื่อนที่ทั้งหมดเสร็จสิ้นแล้วใน Update() 
+        // หรือ FixedUpdate()
+        
+        if (target == null) return;
+        
+        // 1. คำนวณตำแหน่งที่กล้องควรอยู่
+        // ตำแหน่งที่คาดหวัง = ตำแหน่งสุดท้ายของเป้าหมาย + ระยะห่าง
+        Vector3 desiredPosition = target.position + offset;
+        
+        // 2. การเคลื่อนที่แบบหน่วง (Lerp) เพื่อให้การเคลื่อนที่ดูราบรื่น
+        // Vector3.Lerp() คือการเคลื่อนที่ระหว่างจุดสองจุดอย่างราบรื่น
+        Vector3 smoothedPosition = Vector3.Lerp(transform.position,
+                                   desiredPosition, smoothSpeed);
+        
+        // 3. ปรับปรุงตำแหน่งของกล้อง
+        transform.position = smoothedPosition;
+        
+        // *หมายเหตุ: การหมุน (LookAt) ก็ควรดำเนินการใน LateUpdate() เช่นกัน
+        // transform.LookAt(target);
+    }
+}
