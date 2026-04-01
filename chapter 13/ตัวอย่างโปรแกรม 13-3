@@ -1,0 +1,3 @@
+using System.Linq;
+
+var bigNumbers = numbers.Where(n => n > 10);
