@@ -1,0 +1,38 @@
+using UnityEngine;
+
+public class EnemyAI : MonoBehaviour
+{
+    // ตัวแปร Public สำหรับกำหนดค่าใน Inspector
+    public float distanceToPlayer = 0f;
+    public float attackRange = 5f;
+    public float chaseRange = 15f;
+
+    void Update()
+    {
+        // สมมติว่ามีการคำนวณ distanceToPlayer ณ จุดนี้
+
+        // 1. เงื่อนไขโจมตี (Attack)
+        // ใช้ if: ถ้าผู้เล่นเข้าใกล้กว่าระยะโจมตี
+        if (distanceToPlayer <= attackRange)
+        {
+            Debug.Log("!!! ศัตรู: โจมตีผู้เล่น!");
+            // enemy.Attack();
+        }
+
+        // 2. เงื่อนไขไล่ล่า (Chase)
+        // ใช้ else if: ถ้ายังไม่ถึงระยะโจมตี แต่ยังอยู่ในระยะไล่ล่า
+        else if (distanceToPlayer <= chaseRange)
+        {
+            Debug.Log("🏃 ศัตรู: ไล่ล่าผู้เล่น");
+            // enemy.Chase();
+        }
+
+        // 3. เงื่อนไขปกติ (Patrol/Idle)
+        // ใช้ else: ถ้าผู้เล่นอยู่นอกระยะไล่ล่าทั้งหมด
+        else
+        {
+            Debug.Log("💤 ศัตรู: ลาดตระเวน (Patrol)");
+            // enemy.Patrol();
+        }
+    }
+}
