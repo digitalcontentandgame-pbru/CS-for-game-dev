@@ -1,0 +1,81 @@
+using UnityEngine;
+
+public class SimpleCombatSimulator : MonoBehaviour
+{
+    // ตัวแปรสถานะ
+    public int playerHealth = 100;
+    public int enemyHealth = 50;
+
+    void Start()
+    {
+        Debug.Log("--- เริ่มการจำลองการต่อสู้ ---");
+        
+// 1. การโจมตี (Attack) - ส่งค่าพารามิเตอร์, รับค่ากลับ (Return Value)
+        int damageDealt = Attack(15);
+        Debug.Log($"ผู้เล่นโจมตีสร้างความเสียหาย: {damageDealt}");
+        
+
+// 2. การรับความเสียหาย (TakeDamage) - ส่งค่าพารามิเตอร์, ไม่มีค่ากลับ (Void)
+        TakeDamage(damageDealt);
+        
+// 3. การเก็บไอเทม (CollectItem) - ส่งพารามิเตอร์แบบอ้างอิง (ref)
+        Debug.Log($"พลังชีวิตศัตรูก่อนเก็บไอเทม: {enemyHealth}");
+// ส่งตำแหน่งหน่วยความจำของ enemyHealth
+        CollectItem(ref enemyHealth); 
+        Debug.Log($"พลังชีวิตศัตรูหลังเก็บไอเทม: {enemyHealth}");
+        
+        // ตรวจสอบสถานะสุดท้าย
+        if (playerHealth > 0)
+        {
+            Debug.Log(
+                $"[/]ผู้เล่นรอดชีวิต! HP คงเหลือ: {playerHealth}");
+        }
+    }
+
+// เมท็อด Attack(): มีค่าที่ส่งกลับเป็น int (Damage Amount)
+// <param name="baseDamage">ความเสียหายพื้นฐาน (ส่งผ่านแบบค่า)</param>
+// <returns>ค่าความเสียหายรวมที่คำนวณได้</returns>
+    public int Attack(int baseDamage)
+    {
+        // คำนวณความเสียหายโดยเพิ่มค่าโบนัสแบบสุ่ม
+// โบนัส 1-5
+        int bonusDamage = UnityEngine.Random.Range(1, 6); 
+        int totalDamage = baseDamage + bonusDamage;
+        
+        // ส่งค่า totalDamage กลับไป
+        return totalDamage; 
+    }
+
+// เมท็อด TakeDamage(): ไม่มีค่าที่ส่งกลับ (void)
+// มีหน้าที่เปลี่ยนสถานะภายในของคลาส (ลด playerHealth)
+// <param name="damageAmount"> จำนวนความเสียหายที่ได้รับ
+// (ส่งผ่านแบบค่า)</param>
+    public void TakeDamage(int damageAmount)
+    {
+        playerHealth -= damageAmount;
+        Debug.Log(
+$"ผู้เล่นได้รับความเสียหาย {damageAmount} หน่วย. HP เหลือ: {playerHealth}"
+        );
+
+
+        if (playerHealth <= 0)
+        {
+            Debug.Log("!!! ผู้เล่นพ่ายแพ้แล้ว !!! ");
+        }
+    }
+
+// เมท็อด CollectItem(): ไม่มีค่าที่ส่งกลับ (void)
+// แต่มีการส่งผ่านพารามิเตอร์แบบอ้างอิง (ref) เพื่อเปลี่ยนค่าภายนอก
+// <param name="targetHP">พลังชีวิตของเป้าหมาย (ส่งผ่านแบบอ้างอิง)</param>
+    public void CollectItem(ref int targetHP)
+    {
+        int healingAmount = 20;
+        
+// การเปลี่ยนแปลง targetHP ภายในเมท็อดนี้ จะเปลี่ยนค่า enemyHealth ภายนอกด้วย
+        targetHP += healingAmount; 
+        
+        Debug.Log(
+$"เก็บไอเทมฟื้นฟู! ฟื้นฟู {healingAmount} หน่วยให้กับเป้าหมาย"
+          );
+    }
+}
