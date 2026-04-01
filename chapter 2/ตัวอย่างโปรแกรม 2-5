@@ -1,0 +1,27 @@
+using UnityEngine;
+
+public class FloatingPointDemo : MonoBehaviour
+{
+    void Start()
+    {
+        float f = 0.1f;
+        double d = 0.1;
+
+        Debug.Log($"f = {f}");
+        Debug.Log($"d = {d}");
+
+        // แสดงผลแบบละเอียด (20 ตำแหน่งทศนิยม)
+        Debug.Log($"0.1 + 0.2 = {(0.1 + 0.2):F20}");
+        Debug.Log($"0.1f + 0.2f = {(0.1f + 0.2f):F20}");
+
+        // การเปรียบเทียบค่าทศนิยม
+        if (f == 0.1f)
+        {
+            Debug.Log("f is exactly 0.1");
+        }
+        else
+        {
+            Debug.Log("f is not exactly 0.1");
+        }
+    }
+}
