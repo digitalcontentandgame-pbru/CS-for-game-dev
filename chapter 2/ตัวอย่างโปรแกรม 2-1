@@ -1,0 +1,32 @@
+// ประกาศตัวแปร age ชนิด int และกำหนดค่าเป็น 25
+int age = 25;
+
+// ประกาศตัวแปร price ชนิด double และกำหนดค่าเป็น 99.99
+double price = 99.99;
+
+// ประกาศตัวแปร name ชนิด string และกำหนดค่าเป็น "John Doe"
+string name = "John Doe";
+
+// ประกาศตัวแปร pi ชนิด double
+double pi = 3.14159;
+
+// ประกาศตัวแปร initial ชนิด char
+char initial = 'A';
+
+// ประกาศตัวแปร isSunny ชนิด bool
+bool isSunny = true;
+
+// ประกาศตัวแปร name ชนิด string
+string name = "John Doe";
+
+// ประกาศและกำหนดค่าเริ่มต้น
+int score = 0;            // เก็บค่าคะแนนเริ่มต้น
+float health = 100.0f;    // เก็บค่าพลังชีวิต (ต้องมี 'f' ต่อท้ายสำหรับ float literal)
+bool isActive = true;     // เก็บสถานะเปิด/ปิด
+string playerName = "Hero"; // เก็บชื่อผู้เล่น
+char grade = 'A';         // เก็บเกรด (ใช้เครื่องหมายอัญประกาศเดี่ยว)
+
+// การกำหนดค่าในภายหลัง
+score = 500;
+health = 50.5f;
+isActive = false;
