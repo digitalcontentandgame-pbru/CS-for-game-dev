@@ -1,0 +1,37 @@
+using UnityEngine;
+using System.Collections.Generic;
+using System.Linq; // ต้องใช้ namespace นี้สำหรับเมท็อด LINQ
+
+public class LinqListOperations : MonoBehaviour
+{
+    // ตัวแปร public เพื่อแสดงรายการเริ่มต้นใน Inspector
+    [Tooltip("รายการตัวเลขเริ่มต้น")]
+    public List<int> numbers = new List<int> { 1, 2, 3, 4, 5, 6, 7 };
+
+    void Start()
+    {
+        Debug.Log("--- การสาธิตการดำเนินการกับ List ด้วย LINQ ---");
+        Debug.Log(
+$"รายการตัวเลขเริ่มต้น: [{string.Join(", ", numbers)}]"
+        );
+
+        // 1. การกรองข้อมูล (Filtering) ด้วย Where
+        // ค้นหาตัวเลขที่มากกว่า 3 (x > 3)
+        IEnumerable<int> resultGreaterThanThree = numbers.Where(x => x > 3);
+
+        // แสดงผลลัพธ์การกรอง
+        Debug.Log("1. ตัวเลขที่มากกว่า 3: " + 
+                  $"[{string.Join(",  
+                  ", resultGreaterThanThree)}]");  
+
+
+        // 2. การฉายภาพข้อมูล (Projection) ด้วย Select
+        // คูณแต่ละตัวเลขด้วย 2 (x * 2)
+        IEnumerable<int> resultMultipliedByTwo = numbers.Select(x => x * 2);
+
+        // แสดงผลลัพธ์การคูณ
+        Debug.Log("2. ผลลัพธ์ของการคูณแต่ละตัวเลขด้วย 2: " + 
+                  $"[{string.Join(", 
+                  ", resultMultipliedByTwo)}]"); 
+    }
+}
