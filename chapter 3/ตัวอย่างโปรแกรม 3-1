@@ -1,0 +1,59 @@
+using UnityEngine;
+using System;
+
+public class CurrencyDenominationCalculator : MonoBehaviour
+{
+    // ตัวแปร public long เพื่อรับจำนวนเงินจาก Unity Inspector
+    [Tooltip("ป้อนจำนวนเงินที่เป็นจำนวนเต็ม (บาท)")]
+    public long totalMoney = 1587; 
+
+    // เมท็อด Start() จะถูกเรียกครั้งแรกเมื่อสคริปต์เริ่มต้นทำงาน
+    void Start()
+    {
+        CalculateDenominations(totalMoney);
+    }
+
+    public void CalculateDenominations(long money)
+    {
+        if (money < 0)
+        {
+            Debug.LogError("[x] จำนวนเงินต้องเป็นค่าบวก");
+            return;
+        }
+
+        Debug.Log(
+$"--- เริ่มคำนวณการแลกธนบัตรและเหรียญสำหรับยอดรวม: {money} บาท ---"
+           );
+        
+        // 1. ธนบัตร 500 บาท
+        long count500 = money / 500;
+        Debug.Log($"B500 (ธนบัตร 500 บาท) = {count500}");
+        money %= 500; // อัปเดตยอดเงินคงเหลือ
+
+        // 2. ธนบัตร 100 บาท
+        long count100 = money / 100;
+        Debug.Log($"B100 (ธนบัตร 100 บาท) = {count100}");
+        money %= 100;
+
+        // 3. ธนบัตร 50 บาท
+        long count50 = money / 50;
+        Debug.Log($"B50 (ธนบัตร 50 บาท) = {count50}");
+        money %= 50;
+
+        // 4. ธนบัตร 20 บาท
+        long count20 = money / 20;
+        Debug.Log($"B20 (ธนบัตร 20 บาท) = {count20}");
+        money %= 20;
+
+        // 5. เหรียญ 10 บาท
+        long count10 = money / 10;
+        Debug.Log($"C10 (เหรียญ 10 บาท) = {count10}");
+        money %= 10;
+
+        // 6. เหรียญ 1 บาท (ที่เหลือทั้งหมด)
+        // money ที่เหลือ ณ จุดนี้คือเหรียญ 1 บาท
+        Debug.Log($"C1 (เหรียญ 1 บาท) = {money}");
+
+        Debug.Log("--- สิ้นสุดการคำนวณ ---");
+    }
+}
