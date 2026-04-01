@@ -1,0 +1,17 @@
+using UnityEngine;
+
+public class ClassScopeExample : MonoBehaviour
+{
+    int health = 100; // ตัวแปรระดับคลาส (Field)
+
+    void Start()
+    {
+        Debug.Log("พลังชีวิตเริ่มต้น: " + health);
+    }
+
+    void Update()
+    {
+        health--; // เข้าถึงได้จากทุกเมธอดในคลาสเดียวกัน
+        Debug.Log("พลังชีวิตปัจจุบัน: " + health);
+    }
+} 
