@@ -1,0 +1,73 @@
+using UnityEngine;
+
+// กำหนด Enum สำหรับสถานะเกม
+public enum GameState { Menu, Playing, Paused, GameOver }
+
+public class GameStateManager : MonoBehaviour
+{
+    // ตัวแปร Public สำหรับการจัดการสถานะปัจจุบัน
+    public GameState currentState = GameState.Menu;
+
+    void Update()
+    {
+        // ใช้ switch เพื่อตรวจสอบค่าของตัวแปร currentState
+        switch (currentState)
+        {
+            case GameState.Menu:
+                // ดำเนินการเมื่อสถานะเป็น Menu
+                HandleMenuState();
+                break; // ออกจาก switch
+
+
+
+            case GameState.Playing:
+                // ดำเนินการเมื่อสถานะเป็น Playing
+                HandlePlayingState();
+                break;
+
+            case GameState.Paused:
+                // ดำเนินการเมื่อสถานะเป็น Paused
+                HandlePausedState();
+                break;
+
+            case GameState.GameOver:
+                // ดำเนินการเมื่อสถานะเป็น GameOver
+                HandleGameOverState();
+                break;
+
+            default:
+                // กรณีที่ไม่ตรงกับ case ใด ๆ (ไม่น่าจะเกิดขึ้นใน Enum)
+                Debug.LogError("!!! สถานะเกมไม่ถูกต้อง!");
+                break;
+        }
+    }
+
+    // เมท็อดจำลองการทำงานในแต่ละสถานะ
+    private void HandleMenuState() 
+    {
+        Debug.Log("หน้าหลัก: กำลังรอคำสั่งผู้เล่น..."); 
+    }
+
+
+    private void HandlePlayingState() 
+    {
+         /* โค้ดสำหรับอัพเดต Gameplay */ 
+    }
+
+    private void HandlePausedState() 
+    { 
+        Debug.Log("เกมหยุดชั่วคราว: แสดงหน้าจอ Pause"); 
+    }
+
+    private void HandleGameOverState() 
+    { 
+        Debug.Log("เกมจบ: แสดงคะแนนสุดท้าย"); 
+    }
+
+    // ตัวอย่างการเปลี่ยนสถานะจากภายนอก
+    public void SetState(GameState newState)
+    {
+        currentState = newState;
+        Debug.Log($"สถานะเกมถูกเปลี่ยนเป็น: {currentState}");
+    }
+}
