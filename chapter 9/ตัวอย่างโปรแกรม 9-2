@@ -1,0 +1,27 @@
+using UnityEngine;
+
+public class ActorStatDisplay : MonoBehaviour
+{
+    ushort[] actor_stat;
+    string[] stat_info = {"ST","AC","DX","RS","HP","MP","EX"};
+
+    void Start()
+    {
+        actor_stat = new ushort[7];
+
+        // กำหนดค่าพลังพื้นฐานของตัวละคร
+        actor_stat[0] = 5;   // ST (Strength)
+        actor_stat[1] = 4;   // AC (Armor Class)
+        actor_stat[2] = 5;   // DX (Dexterity)
+        actor_stat[3] = 5;   // RS (Resistance)
+        actor_stat[4] = 10;  // HP (Hit Points)
+        actor_stat[5] = 10;  // MP (Mana Points)
+        actor_stat[6] = 0;   // EX (Experience)
+
+        // แสดงผลค่าทั้งหมดใน Console ของ Unity
+        for (int idx = 0; idx < actor_stat.Length; idx++)
+        {
+            Debug.Log($"{stat_info[idx]} = {actor_stat[idx]}");
+        }
+    }
+}
