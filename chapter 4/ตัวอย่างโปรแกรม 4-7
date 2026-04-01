@@ -1,0 +1,45 @@
+using UnityEngine;
+
+public class WorkdayChecker : MonoBehaviour
+{
+    // ตัวแปร public เพื่อรับชื่อวันจาก Unity Inspector
+    [Tooltip("กรอกชื่อวันในสัปดาห์ (เช่น จันทร์, อังคาร, เสาร์)")]
+    public string dayOfWeek = "จันทร์"; 
+
+    // เมท็อด Start() จะถูกเรียกครั้งแรกเมื่อสคริปต์เริ่มต้นทำงาน
+    void Start()
+    {
+        CheckWorkStatus();
+    }
+
+    public void CheckWorkStatus()
+    {
+        string statusMessage;
+
+        // ใช้โครงสร้าง switch เพื่อตรวจสอบค่าของ string
+        switch (dayOfWeek)
+        {
+            case "จันทร์":
+            case "อังคาร":
+            case "พุธ":
+            case "พฤหัสบดี":
+            case "ศุกร์":
+                // รวมหลาย case ที่มีผลลัพธ์เดียวกันเข้าด้วยกัน
+                statusMessage = "วันทำงาน";
+                break;
+            
+            case "เสาร์":
+            case "อาทิตย์":
+                statusMessage = "วันหยุด";
+                break;
+
+            default:
+                // กรณีที่ชื่อวันไม่ถูกต้อง
+                statusMessage = "ชื่อวันไม่ถูกต้อง หรือเป็นวันหยุดพิเศษ";
+                break;
+        }
+
+        // แสดงผลลัพธ์ใน Unity Console
+        Debug.Log($"วันนี้ ({dayOfWeek}) จัดเป็น: {statusMessage}");
+    }
+}
