@@ -1,0 +1,60 @@
+using UnityEngine;
+
+// เพื่อให้มั่นใจว่า GameObject มี Rigidbody
+[RequireComponent(typeof(Rigidbody))] 
+
+public class RigidbodyMovement : MonoBehaviour
+{
+    // กำหนดความเร็วในการเคลื่อนที่ด้วยแรง
+    public float accelerationForce = 15f; 
+    
+    // ตัวแปรสำหรับเก็บการอ้างอิง Rigidbody
+    private Rigidbody rb;
+    
+    // ตัวแปรสำหรับเก็บค่าอินพุตจากผู้ใช้
+    private Vector3 movementInput;
+
+    private void Awake()
+    {
+        // รับการอ้างอิง Rigidbody ใน Awake() เพื่อความปลอดภัย
+        rb = GetComponent<Rigidbody>();
+    }
+
+    // ใช้ Update() เพื่อรับอินพุตเท่านั้น เนื่องจากความถี่ของ Update 
+    // สูงกว่าและรับอินพุตได้ทันที (Immediate Input Response)
+    private void Update()
+    {
+        float horizontal = Input.GetAxis("Horizontal");
+        float vertical = Input.GetAxis("Vertical");
+        
+        // เก็บค่าอินพุตไว้ในตัวแปร Vector3
+        movementInput = new Vector3(horizontal, 0f,
+                                    vertical).normalized;
+    }
+
+
+
+
+    // ************ การควบคุมพฤติกรรมที่เกี่ยวข้องกับฟิสิกส์ ************
+    private void FixedUpdate()
+    {
+        // ใน FixedUpdate() เราใช้ค่าอินพุตที่เก็บไว้จาก Update() 
+        // เพื่อคำนวณแรงที่กระทำต่อ Rigidbody
+
+        if (movementInput != Vector3.zero)
+        {
+            // คำนวณทิศทางแรง: ทิศทางอินพุต * ความเร็ว * Time.fixedDeltaTime 
+            // *หมายเหตุ: การคูณด้วย fixedDeltaTime มักจะไม่จำเป็นสำหรับ AddForce 
+            // แต่รวมไว้เพื่อการควบคุมที่แม่นยำขึ้น หากจำเป็น*
+            Vector3 force = movementInput * accelerationForce;
+            
+            // ใช้ AddForce เพื่อออกแรงผลักดัน Rigidbody
+            // นี่คือเมธอดที่ต้องถูกเรียกใน FixedUpdate() เท่านั้น 
+            // เพื่อให้การจำลองฟิสิกส์สม่ำเสมอ
+            rb.AddForce(force, ForceMode.Acceleration);
+        }
+        
+        // ตัวอย่างอื่น: การใช้ Raycasting เพื่อตรวจหาพื้นดินเพื่ออนุญาตการกระโดด
+        // if (Physics.Raycast(rb.position, Vector3.down, 0.5f)) { ... }
+    }
+}
