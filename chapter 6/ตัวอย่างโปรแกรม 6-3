@@ -1,0 +1,19 @@
+using UnityEngine;
+
+public class GreetingMethodWithParameter : MonoBehaviour
+{
+    // ตัวแปร public string เพื่อรับค่าชื่อจาก Unity Inspector
+    [Tooltip("กรุณากรอกชื่อที่ต้องการทักทาย")]
+    public string userName = "DcG.IT@PBRU"; 
+
+    void Start()
+    {
+        Greeting(userName);
+    }
+
+// เมท็อด Greeting(): ไม่มีค่าส่งกลับ (void) แต่รับพารามิเตอร์ string
+    private void Greeting(string name)
+    {
+        Debug.Log("สวัสดีครับ/ค่ะ " + name);
+    }
+}
