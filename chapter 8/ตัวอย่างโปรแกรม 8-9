@@ -1,0 +1,94 @@
+using UnityEngine;
+
+// กำหนดให้สคริปต์ต้องการ Rigidbody Component เพื่อใช้ FixedUpdate
+[RequireComponent(typeof(Rigidbody))]
+public class CharacterLifecycleController : MonoBehaviour
+{
+    // [SerializeField] ทำให้ตัวแปร private แสดงใน Inspector
+    [SerializeField] private float movementSpeed = 5f;
+    [SerializeField] private float initialHealth = 100f;
+
+
+    // การอ้างอิง Component (ใช้ Private เพื่อ Encapsulation)
+    private Rigidbody rb;
+    private float horizontalInput;
+    private float currentHealth; 
+
+// 1. INITIALIZATION: กำหนดการอ้างอิงและค่าเริ่มต้น
+// Awake() : ถูกเรียกครั้งแรกสุด ใช้สำหรับการดึง Component
+    void Awake()
+    {
+        // การกำหนดการอ้างอิงภายใน (Internal Reference)
+        rb = GetComponent<Rigidbody>();
+        Debug.Log("1. [Awake] - ดึง Rigidbody Component เรียบร้อย");
+    }
+
+// Start() : ถูกเรียกในเฟรมแรก ใช้สำหรับการกำหนดค่าเริ่มต้น
+    void Start()
+    {
+        // การกำหนดค่าเริ่มต้นของตัวละคร
+        currentHealth = initialHealth;
+        Debug.Log(
+$"2. [Start] - กำหนดค่า HP เริ่มต้น: {currentHealth}"
+        );
+    }
+
+// 2. PER-FRAME UPDATES: อินพุตและลอจิก
+// Update() : ถูกเรียกทุกเฟรม ใช้สำหรับการอ่านอินพุต
+    void Update()
+    {
+        // การประมวลผลอินพุต: อ่านค่าในเฟรมปัจจุบัน
+        horizontalInput = Input.GetAxis("Horizontal");
+
+        // ลอจิกเกมที่ไม่เกี่ยวกับฟิสิกส์: เช่น การตรวจสอบสถานะ
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Debug.Log("4. [Update] - รับอินพุต Space Bar");
+        }
+    }
+
+// FixedUpdate() ถูกเรียกตามรอบฟิสิกส์ ใช้สำหรับการเคลื่อนที่ของ Rigidbody
+    void FixedUpdate()
+    {
+        // การคำนวณฟิสิกส์: ใช้ค่าอินพุตที่อ่านได้จาก Update()
+        Vector3 movement = new Vector3(horizontalInput, 0f, 0f)
+                               * movementSpeed;
+        
+        // การเคลื่อนที่โดยใช้ Rigidbody
+        rb.MovePosition(rb.position + movement 
+                        * Time.fixedDeltaTime);
+        
+        // Debug.Log แสดง FixedUpdate() เพื่อสังเกตความถี่
+        // Debug.Log("3. [FixedUpdate] - ปรับปรุงตำแหน่งทางฟิสิกส์");
+    }
+
+// LateUpdate() : ถูกเรียกหลัง Update() และ FixedUpdate() ทั้งหมด
+    void LateUpdate()
+    {
+        // การจัดการกล้อง: ตรวจสอบให้แน่ใจว่าตัวละครเคลื่อนที่เสร็จสมบูรณ์แล้ว
+        // ตัวอย่างเช่น การปรับตำแหน่งกล้องให้ตามตัวละคร
+        if (Camera.main != null)
+        {
+            Vector3 targetPosition = transform.position + 
+                                     new Vector3(0, 5, -10);
+            Camera.main.transform.position = Vector3.Lerp(
+                Camera.main.transform.position, 
+                targetPosition, 
+                0.1f
+             );
+        }
+        Debug.Log("5. [LateUpdate] - ปรับตำแหน่งกล้องตามตัวละคร");
+    }
+    
+// เมท็อดสำหรับการสื่อสารกับสคริปต์อื่น (Public Method)
+// เมท็อด public สำหรับรับความเสียหาย
+    public void TakeDamage(float damage)
+    {
+        currentHealth -= damage;
+
+
+        Debug.Log(
+$"ตัวละครได้รับความเสียหาย {damage} หน่วย. HP เหลือ {currentHealth}"
+        );
+    }
+}
