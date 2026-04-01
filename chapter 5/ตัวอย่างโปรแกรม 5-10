@@ -1,0 +1,88 @@
+using UnityEngine;
+
+public class TimeChallengeGame : MonoBehaviour
+{
+    // ตัวแปร Public
+    public float timeLimit = 10.0f; // เวลาจำกัด 10 วินาที
+    public int secretNumber = 50;   // เลขลับที่ต้องทาย
+    
+    // ตัวแปร Private
+    private float currentTime;
+    private bool isRunning = false;
+
+    void Start()
+    {
+        StartGame();
+    }
+
+    private void StartGame()
+    {
+        currentTime = timeLimit;
+        isRunning = true;
+        // secretNumber = Random.Range(1, 101); // หากต้องการสุ่ม
+        Debug.Log(
+$"เกมเริ่มต้น: ทายเลขระหว่าง 1-100 ภายใน {timeLimit} วินาที"
+            );
+    }
+
+    // เมท็อด Update ถูกเรียกทุกเฟรม (เทียบเท่าการวนซ้ำอย่างต่อเนื่อง)
+    void Update()
+    {
+        if (!isRunning) return;
+
+// 1. การนับถอยหลังโดยใช้ While (ในบริบทของ Update)
+// ใน Unity เราจัดการ Timer ภายใน Update() เพราะเป็น Loop หลักของเกม
+// ใช้ตัวดำเนินการทางคณิตศาสตร์: - และ * (คูณด้วย Time.deltaTime)
+        currentTime -= Time.deltaTime; 
+
+// 2. ตรวจสอบเงื่อนไขจบเกม (หมดเวลา)
+// ใช้ while เพื่อแสดงผลลัพธ์ต่อเนื่องจนกว่าเวลาจะหมด
+        if (currentTime <= 0)
+        {
+            GameOver(false); // หมดเวลาแล้ว
+        }
+    }
+
+    // เมท็อดรับการทายเลขจากผู้เล่น (จำลอง)
+    public void SubmitGuess(int guess)
+    {
+        if (!isRunning) return;
+// 3. การประมวลผลการทายเลขด้วย If-Else If
+// ใช้ตัวดำเนินการเปรียบเทียบ: ==, >
+        if (guess == secretNumber)
+        {
+            GameOver(true); // ทายถูก
+        }
+        else if (guess > secretNumber)
+        {
+            Debug.Log("น้อยเกินไป!");
+        }
+        else
+        {
+            Debug.Log("มากเกินไป!");
+        }
+    }
+
+    private void GameOver(bool success)
+    {
+        isRunning = false;
+        if (success)
+        {
+            Debug.Log("[/] ชนะ! คุณทายถูกทันเวลา!");
+        }
+        else
+        {
+            // currentTime ถูกตัดเหลือ 0
+            Debug.Log("[X] แพ้! หมดเวลาแล้ว");
+        }
+    }
+
+    // แสดงผลเวลาที่เหลือใน GUI/Console
+    void OnGUI()
+    {
+        if (isRunning)
+        {
+            GUILayout.Label($"Time Left: {currentTime:F2} s");
+        }
+    }
+}
