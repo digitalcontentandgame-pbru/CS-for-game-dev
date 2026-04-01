@@ -1,0 +1,16 @@
+using UnityEngine;
+
+public class LocalScopeExample : MonoBehaviour
+{
+    void Start()
+    {
+        int score = 100; // ตัวแปรภายในเมธอด (Local Variable)
+        Debug.Log("คะแนนใน Start(): " + score);
+    }
+
+    void Update()
+    {
+// จะเกิดข้อผิดพลาดเพราะ score อยู่นอกขอบเขต
+        Debug.Log(score); 
+    }
+}
