@@ -1,0 +1,37 @@
+using UnityEngine;
+
+public class OutKeywordExample : MonoBehaviour
+{
+// ตัวแปรที่ต้องประกาศแต่ไม่ต้องกำหนดค่าเริ่มต้น เพราะจะถูกกำหนดค่าโดยเมท็อด GetValues
+    private int valueA;
+    private int valueB;
+
+    void Start()
+    {
+        // 1. เรียกใช้เมท็อด GetValues ด้วยคีย์เวิร์ด 'out'
+        // ตัวแปร valueA และ valueB ไม่จำเป็นต้องถูกกำหนดค่าเริ่มต้น
+        GetValues(out valueA, out valueB);
+
+        // 2. แสดงผลลัพธ์หลังการเรียกเมท็อด
+        // ค่าของ valueA และ valueB จะถูกกำหนดเป็น 5 และ 10 ตามลำดับ
+        Debug.Log($"ค่าที่ถูกกำหนดโดยเมท็อด GetValues: ");
+        Debug.Log($"ตัวแปร A (ค่าเดิม x): {valueA}"); 
+        Debug.Log($"ตัวแปร B (ค่าเดิม y): {valueB
+        Debug.Log(
+           "หมายเหตุ: 'out' บังคับให้เมท็อดต้องกำหนดค่าให้กับตัวแปรเหล่านี้"
+           );
+    }
+
+    /// เมท็อด GetValues(): ใช้ 'out' เพื่อกำหนดค่าให้กับตัวแปรที่ส่งเข้ามา
+    /// ตัวแปรพารามิเตอร์ (x และ y) ต้องถูกกำหนดค่าภายในเมท็อดก่อนส่งกลับ
+    private void GetValues(out int x, out int y)
+    {
+        // การกำหนดค่าให้กับพารามิเตอร์ 'out' (เป็นข้อบังคับ)
+        x = 5;
+        y = 10;
+        
+        Debug.Log(
+$"[ภายในเมท็อด GetValues] กำหนดค่า x={x}, y={y}"
+        );
+    }
+}
