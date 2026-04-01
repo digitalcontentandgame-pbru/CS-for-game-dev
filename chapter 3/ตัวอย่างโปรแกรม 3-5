@@ -1,0 +1,59 @@
+using UnityEngine;
+
+public class PowerCalculator : MonoBehaviour
+{
+    // ตัวแปรพื้นฐานของตัวละคร
+    public int baseAttack = 10; 
+    public int weaponDamage = 25;
+    public float criticalChance = 0.25f; // โอกาสคริติคอล 25%
+    public float critMultiplier = 1.5f;  // ตัวคูณคริติคอล 150%
+
+    void Start()
+    {
+        CalculatePower();
+    }
+
+    public void CalculatePower()
+    {
+        // 1. คำนวณความเสียหายรวม (Total Base Damage)
+        // ใช้ตัวดำเนินการทางคณิตศาสตร์: +
+        int totalDamage = baseAttack + weaponDamage;
+
+        // 2. คำนวณความเสียหายคริติคอล (Critical Damage)
+        // ใช้ตัวดำเนินการทางคณิตศาสตร์: * 
+        // แปลง totalDamage เป็น float ชั่วคราวเพื่อดำเนินการคูณด้วย float
+        float critDamage = totalDamage * critMultiplier; 
+
+        // 3. ตรวจสอบเงื่อนไขว่าตัวละครมีโอกาสคริติคอลสูงหรือไม่
+        // ใช้ตัวดำเนินการเปรียบเทียบ: >
+        bool hasHighCritChance = criticalChance > 0.5f; 
+
+        // 4. การแสดงผลลัพธ์
+        Debug.Log(
+$"Base Attack Power:{baseAttack}+{weaponDamage}=[{totalDamage}]"
+        );
+        Debug.Log(
+$"Critical Attack Power:{totalDamage}*{critMultiplier}=[{critDamage}]"
+        );
+
+        // 5. การใช้ตัวดำเนินการตรรกะในการแจ้งเตือน
+        // ใช้ตัวดำเนินการตรรกะ: ! (ไม่ใช่)
+        if (!hasHighCritChance)
+        {
+            Debug.LogWarning(
+       "Critical chance is less than 50%. Please increase the status."
+            );
+        }
+
+        // 6. การใช้ตัวดำเนินการ Modulus (%) เพื่อกำหนดโบนัส (หากมีเศษเป็น 0)
+        // ใช้ตัวดำเนินการทางคณิตศาสตร์: % และ ตัวดำเนินการเปรียบเทียบ: ==
+        if (baseAttack % 5 == 0) 
+        {
+
+
+             Debug.Log(
+                 "Power Bonus: Since Base Attack is divisible by 5"
+             );
+        }
+    }
+}
