@@ -1,0 +1,3 @@
+bool eq1=(a == b);
+bool eq2=string.Equals(a,b,StringComparison.OrdinalIgnoreCase);
+bool eq3=string.Equals(a,b,StringComparison.CurrentCulture);
