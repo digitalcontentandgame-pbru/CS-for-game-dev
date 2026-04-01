@@ -1,0 +1,17 @@
+using UnityEngine;
+using TMPro; // หากใช้ TextMeshPro ต้องแน่ใจว่าแพ็กเกจถูกติดตั้ง
+
+public class ShowTextUI : MonoBehaviour
+{
+    [TextArea]
+    public string message = "สวัสดี Unity";
+    public TMP_Text uiText; // ลิงก์ TextMeshPro UI ใน Inspector
+
+    void Start()
+    {
+        if (uiText != null)
+            uiText.text = message;
+        else
+            Debug.Log(message);
+    }
+}
