@@ -1,0 +1,17 @@
+using UnityEngine;
+
+public class ParseExample : MonoBehaviour
+{
+    void Start()
+    {
+        string input = "42";
+        if (int.TryParse(input, out int value))
+        {
+            Debug.Log($"Parsed value = {value}");
+        }
+        else
+        {
+            Debug.LogWarning("Input is not a valid integer");
+        }
+    }
+}
