@@ -1,0 +1,42 @@
+using UnityEngine;
+
+public class GameLogic : MonoBehaviour
+{
+    // ตัวแปรสำหรับเก็บค่าในเกม
+    public int playerScore = 0;
+    public float playerHealth = 75.5f;
+    public bool isPlayerActive = true;
+
+
+
+
+    void Start()
+    {
+        // 1. การแสดงข้อความแจ้งเตือน (string literal)
+        Debug.Log(
+            "The game has started! Checking player status...");
+
+        // 2. การแสดงค่าตัวแปรเดี่ยว
+        Debug.Log("Current Score: " + playerScore);  
+
+        // 3. การแสดงค่าตัวแปรพร้อมการแปลงชนิดข้อมูลเพื่อการทดสอบ
+        // แปลง float (Health) เป็น int เพื่อแสดงค่าเต็ม
+        int healthInteger = (int)playerHealth;
+
+        Debug.Log("Life Force (Integer): " + healthInteger); 
+
+        // 4. การแสดงสถานะตรรกะ (bool)
+        if (isPlayerActive)
+        {
+            Debug.Log("Status: Player **Active**");
+        }
+        else
+        {
+            Debug.Log("Status: Player **Inactive**");
+        }
+
+        // 5. การแสดงผลลัพธ์จากการดำเนินการหรือการเปลี่ยนแปลง
+        playerScore = playerScore + 10;
+        Debug.Log("Score after receiving bonus: "+playerScore);
+    }
+}
