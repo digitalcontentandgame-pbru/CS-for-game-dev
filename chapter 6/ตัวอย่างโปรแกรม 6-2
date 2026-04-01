@@ -1,0 +1,16 @@
+using UnityEngine;
+
+public class SimpleGreetingMethod : MonoBehaviour
+{
+    void Start()
+    {
+        Greeting();
+    }
+
+    // เมท็อด Greeting(): ไม่มีค่าส่งกลับ (void) และไม่มีพารามิเตอร์
+    // มีหน้าที่เพียงแสดงข้อความทักทายใน Console
+    private void Greeting()
+    {
+        Debug.Log("สวัสดีครับ/ค่ะ");
+    }
+}
