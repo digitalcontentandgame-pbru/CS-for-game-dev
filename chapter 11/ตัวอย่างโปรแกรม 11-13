@@ -1,0 +1,48 @@
+using UnityEngine;
+
+public class Rogue : Creature
+{
+    private float dodgeChance = 0.20f;
+    private float criticalChance = 0.30f;
+
+    public Rogue(string name, Weapon weapon, Armor armor)
+        : base(name, maxHP: 80, baseAttack: 15, 
+            baseDefense: 5, weapon, armor)
+    {
+    }
+
+    public override void Attack(Creature target)
+    {
+        // คำนวณคริติคอล
+        bool isCritical = Random.value < criticalChance;
+
+        int totalAttack = BaseAttack + (Weapon?.AttackBonus??0);
+        if (isCritical) totalAttack *= 2;
+
+        int totalDefense = target.BaseDefense +
+                           (target.Armor?.DefenseBonus ?? 0);
+
+        int damage = totalAttack - totalDefense;
+        if (damage < 1) damage = 1;
+
+        target.HP -= damage;
+
+        if (isCritical)
+        {
+            Debug.Log(
+$"X2 {Name} ใช้โจมตีคริติคอล! ความเสียหาย {damage}"
+            );
+        }
+        else
+        {
+            Debug.Log(
+$"{Name} โจมตี {target.Name} สร้างความเสียหาย {damage}"
+            );
+        }
+    }
+
+    public bool TryDodge()
+    {
+        return Random.value < dodgeChance;
+    }
+}
