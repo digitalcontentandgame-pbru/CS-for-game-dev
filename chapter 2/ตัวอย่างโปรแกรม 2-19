@@ -1,0 +1,10 @@
+
+if (string.IsNullOrEmpty(input)) 
+{ 
+    // handle empty or null 
+}
+
+if (string.IsNullOrWhiteSpace(input)) 
+{ 
+    // handle whitespace-only 
+}
