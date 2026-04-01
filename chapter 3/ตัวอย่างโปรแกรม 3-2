@@ -1,0 +1,52 @@
+using System;
+
+[Flags]
+public enum PlayerAbilities
+{
+    None = 0,             // 0000
+    CanJump = 1 << 0,     // 0001 (ค่า 1)
+    CanRun = 1 << 1,      // 0010 (ค่า 2)
+    CanCrouch = 1 << 2,   // 0100 (ค่า 4)
+    CanFly = 1 << 3       // 1000 (ค่า 8)
+}
+
+public class BitwiseExample : MonoBehaviour
+{
+    public PlayerAbilities currentAbilities;
+
+    void Start()
+    {
+// 1. การกำหนดสถานะ (Setting Flags)
+// ใช้ Bitwise OR (|) เพื่อรวมสถานะ (Set the bits)
+// ผู้เล่นมีสถานะ CanJump (0001) และ CanCrouch (0100)
+
+        currentAbilities = PlayerAbilities.CanJump |
+                           PlayerAbilities.CanCrouch; 
+        // currentAbilities มีค่าเป็น 0101 (ค่า 5)
+        Debug.Log($"Initial state: {currentAbilities}");
+ 
+// 2. การเพิ่มสถานะ (Adding a Flag)
+// ใช้ Bitwise OR (|) เพื่อเปิดบิตของ CanRun
+        currentAbilities |= PlayerAbilities.CanRun;
+        // currentAbilities มีค่าเป็น 0111 (ค่า 7)
+        Debug.Log(
+            $"Status after adding CanRun: {currentAbilities}"
+        );  
+
+// 3. การตรวจสอบสถานะ (Checking a Flag)
+// ใช้ Bitwise AND (&) เพื่อดูว่าบิตที่ต้องการตรวจสอบถูกเปิดอยู่หรือไม่
+        if ((currentAbilities & PlayerAbilities.CanRun) ==
+              PlayerAbilities.CanRun)
+        {
+            Debug.Log("[/] Players can run (CanRun)");
+        }
+// 4. การลบสถานะ (Removing a Flag)
+// ใช้ Bitwise AND (&) ร่วมกับ Bitwise NOT (~) เพื่อปิดบิตของ CanJump
+// ~CanJump (0001) จะเป็น 1110 
+// 0111 & 1110 = 0110
+        currentAbilities &= ~PlayerAbilities.CanJump;
+        Debug.Log(
+            $"Status after deleting CanJump: {currentAbilities}"
+        );  
+    }
+}
