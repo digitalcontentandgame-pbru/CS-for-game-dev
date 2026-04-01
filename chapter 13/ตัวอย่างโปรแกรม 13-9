@@ -1,0 +1,72 @@
+using System.Linq;
+using UnityEngine;
+
+public class InventoryAnalyzer
+{
+    private Inventory inventory;
+
+
+
+
+    public InventoryAnalyzer(Inventory inventory)
+    {
+        this.inventory = inventory;
+    }
+
+    // 1) ดึงเฉพาะ potion ทั้งหมด
+    public void PrintAllPotions()
+    {
+        var potions = inventory
+            .GetAllSlots()
+            .Where(slot => slot.Item.Type == ItemType.Potion);
+
+        Debug.Log("=== POTIONS ===");
+        foreach (var slot in potions)
+        {
+            Debug.Log($"{slot.Item.Name} x {slot.Quantity}");
+        }
+    }
+
+    // 2) จัดเรียงไอเทมตามชื่อ
+    public void PrintSortedByName()
+    {
+        var sorted = inventory
+            .GetAllSlots()
+            .OrderBy(slot => slot.Item.Name);
+
+        Debug.Log("=== SORTED BY NAME ===");
+        foreach (var slot in sorted)
+        {
+            Debug.Log($"{slot.Item.Name} x {slot.Quantity}");
+        }
+    }
+
+    // 3) รวมจำนวน Herb ทั้งหมดในคลัง
+    public void PrintTotalHerb()
+    {
+        int herbId = 4; // Herb
+        int total = inventory
+            .GetAllSlots()
+            .Where(slot => slot.Item.Id == herbId)
+            .Sum(slot => slot.Quantity);
+
+        Debug.Log($"จำนวน Herb รวม = {total}");
+    }
+
+    // 4) จัดกลุ่มตามประเภท แล้วบอกจำนวนรวมของแต่ละประเภท
+    public void PrintSummaryByItemType()
+    {
+        var groups = inventory
+            .GetAllSlots()
+            .GroupBy(slot => slot.Item.Type);
+
+        Debug.Log("=== SUMMARY BY TYPE ===");
+        foreach (var group in groups)
+        {
+            int totalQty = group.Sum(slot => slot.Quantity);
+            Debug.Log(
+$"{group.Key} : {totalQty} ชิ้น (ใน {group.Count()} ช่อง)"
+                 );
+        }
+    }
+}
