@@ -1,0 +1,11 @@
+public class Armor
+{
+    public string Name { get; private set; }
+    public int DefenseBonus { get; private set; }
+
+    public Armor(string name, int defenseBonus)
+    {
+        Name = name;
+        DefenseBonus = defenseBonus;
+    }
+}
