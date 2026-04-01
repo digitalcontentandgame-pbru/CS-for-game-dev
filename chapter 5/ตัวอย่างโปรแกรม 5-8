@@ -1,0 +1,40 @@
+using UnityEngine;
+
+public class GotoExample : MonoBehaviour
+{
+    public int[,] grid = { { 1, 2, 3 }, 
+                           { 4, 5, 6 },
+                           { 7, 8, 9 } };
+    public int targetValue = 5;
+
+    void Start()
+    {
+        FindTargetInGrid();
+    }
+
+    private void FindTargetInGrid()
+    {
+        // ลูปชั้นนอก (แถว)
+        for (int row = 0; row < 3; row++)
+        {
+            // ลูปชั้นใน (คอลัมน์)
+            for (int col = 0; col < 3; col++)
+            {
+                if (grid[row, col] == targetValue)
+                {
+                    Debug.Log(
+$"! พบค่า {targetValue} ที่ตำแหน่ง ({row}, {col})"
+                    );
+                    // ใช้ goto เพื่อข้ามการวนซ้ำทั้งลูปในและลูปนอกทันที
+                    goto FoundTarget; 
+                }
+            }
+        }
+        
+        // นี่คือป้ายชื่อ (Label) ที่คำสั่ง goto จะกระโดดมา
+        FoundTarget: 
+        Debug.Log("การค้นหาเสร็จสมบูรณ์โดยการกระโดดออก.");
+
+        // คำสั่งที่อยู่ถัดจากป้ายชื่อจะถูกดำเนินการต่อ
+    }
+}
