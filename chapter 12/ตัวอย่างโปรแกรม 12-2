@@ -1,0 +1,185 @@
+using UnityEngine;
+using System;
+using System.IO;
+
+// โครงสร้างข้อมูล (Blueprint) สำหรับการบันทึก
+// ต้องใช้ [Serializable] เพื่อให้ JsonUtility ใช้งานได้
+[Serializable]
+public class PlayerData
+{
+    public string playerName;
+    public int highestScore;
+    public float playTimeHours;
+    public DateTime lastSaved;
+
+    // Constructor เพื่อให้ง่ายต่อการสร้าง Object
+    public PlayerData(string name, int score, float time)
+    {
+        this.playerName = name;
+        this.highestScore = score;
+        this.playTimeHours = time;
+        this.lastSaved = DateTime.Now;
+    }
+}
+
+// คลาสจัดการการบันทึก/โหลด
+public class SaveLoadManager : MonoBehaviour
+{
+    // ชื่อไฟล์ที่จะใช้ในการบันทึก
+    private const string SAVE_FILE_NAME = "player_data.json";
+    private string savePath;
+
+    void Awake()
+    {
+        // กำหนดพาธการบันทึกที่ปลอดภัยตามมาตรฐาน Unity
+        savePath = Path.Combine(
+                   Application.persistentDataPath, SAVE_FILE_NAME);
+        Debug.Log($"พาธในการบันทึกไฟล์: {savePath}");
+    }
+
+    void Start()
+    {
+        // 1. ลองโหลดข้อมูลที่มีอยู่ก่อน
+        PlayerData loadedData = LoadGameData();
+        
+        // 2. ถ้าโหลดไม่ได้หรือเป็นค่าเริ่มต้น ให้บันทึกข้อมูลใหม่
+        if (loadedData.highestScore == 0)
+        {
+            Debug.Log(
+"\n[Simulation] ไม่พบข้อมูลเก่า/ข้อมูลเสียหาย เริ่มต้นเกมใหม่..."
+                 );
+            PlayerData newData = new PlayerData("Rogue_Player", 
+                                                 500, 1.5f);
+            SaveGameData(newData);
+        }
+        else
+        {
+            Debug.Log(
+"\n[Simulation] โหลดข้อมูลสำเร็จ: แสดงข้อมูลผู้เล่นล่าสุด"
+                 );
+            Debug.Log(
+$"ผู้เล่น: {loadedData.playerName},"+
+$" คะแนนสูงสุด: {loadedData.highestScore},"+
+$" บันทึกเมื่อ: {loadedData.lastSaved:G}"
+            );
+            
+            // สาธิตการอัปเดตและบันทึกซ้ำ
+            loadedData.highestScore += 100;
+            loadedData.playTimeHours += 0.5f;
+            SaveGameData(loadedData);
+        }
+    }
+
+    // บันทึกข้อมูลเกมลงในไฟล์ข้อความ (JSON)
+    // นำเข้า Object ข้อมูลที่จะบันทึก
+    public void SaveGameData(PlayerData data)
+    {
+        try
+        {
+            // 1. แปลง Object ให้เป็น JSON String (Serialization)
+            string jsonString = JsonUtility.ToJson(data);
+
+            // 2. เขียน String ลงในไฟล์
+            File.WriteAllText(savePath, jsonString);
+            
+            Debug.Log(
+$"\n[SAVE SUCCESS] บันทึกข้อมูลผู้เล่น '{data.playerName}' สำเร็จ."
+                 );
+            
+            // 3. สาธิตการโยนข้อยกเว้นแบบกำหนดเอง (ถ้าคะแนนต่ำกว่าที่กำหนด)
+            if (data.highestScore < 100)
+            {
+                throw new Exception(
+"ERROR: Score must be greater than 100."
+                       );
+            }
+        }
+        catch (IOException e)
+        {
+            // ดักจับข้อผิดพลาด I/O ทั่วไป (เช่น สิทธิ์การเข้าถึงถูกปฏิเสธ)
+            Debug.LogError(
+$"[SAVE FAILED - IO ERROR] ไม่สามารถเขียนไฟล์ได้: {e.Message}"
+            );
+        }
+        catch (Exception e)
+        {
+            // ดักจับข้อผิดพลาดอื่น ๆ ที่ไม่คาดคิด (รวมถึงข้อยกเว้นที่โยนเอง)
+            Debug.LogError(
+$"[SAVE FAILED - UNEXPECTED] ข้อผิดพลาดทั่วไป: {e.Message}"
+            );
+        }
+        finally
+        {
+            // ทำงานเสมอ: ใช้สำหรับงานทำความสะอาด/แจ้งเตือน
+            Debug.Log("[FINALLY] กระบวนการบันทึกเสร็จสิ้น");
+        }
+    }
+
+    // โหลดข้อมูลเกมจากไฟล์ข้อความ (JSON)
+    // คืนค่า Object PlayerData ที่โหลดได้
+    public PlayerData LoadGameData()
+    {
+        // สร้าง Object เปล่าเพื่อคืนค่าเริ่มต้นหากโหลดล้มเหลว
+        PlayerData defaultData = new PlayerData("Default", 0, 0f);
+
+        // 1. ตรวจสอบว่าไฟล์มีอยู่จริงหรือไม่
+        if (!File.Exists(savePath))
+        {
+            Debug.Log(
+"[LOAD] ไม่พบไฟล์บันทึก ('FileNotFound'). คืนค่าเริ่มต้น."
+                 );
+            return defaultData;
+        }
+
+        try
+        {
+            // 2. อ่าน String จากไฟล์
+            string jsonString = File.ReadAllText(savePath);
+            
+            // 3. แปลง JSON String กลับไปเป็น Object (Deserialization)
+            PlayerData data =
+                   JsonUtility.FromJson<PlayerData>(jsonString);
+            
+            // 4. ตรวจสอบความสมบูรณ์ของข้อมูล (Validation)
+            if (string.IsNullOrEmpty(data.playerName))
+            {
+                // โยนข้อยกเว้นแบบกำหนดเองถ้าข้อมูลเสียหาย
+                throw new FormatException(
+"ข้อมูลผู้เล่นในไฟล์เสียหาย (Name is null or empty)."
+                );
+            }
+            
+            return data;
+        }
+        catch (FileNotFoundException)
+        {
+            // ดักจับกรณีไฟล์ถูกลบระหว่างการตรวจสอบ/การอ่าน 
+            // แม้ว่าจะตรวจสอบ File.Exists ไปแล้ว
+            Debug.LogError(
+"[LOAD FAILED] ไฟล์บันทึกหายไปแล้ว (FNF Exception)."
+            );
+        }
+        catch (FormatException e)
+        {
+            // ดักจับข้อยกเว้นที่โยนเอง (ข้อมูลเสียหาย)
+            Debug.LogError(
+$"[LOAD FAILED - DATA CORRUPT] ข้อผิดพลาดในการจัดรูปแบบ: {e.Message}"
+            );
+        }
+        catch (Exception e)
+        {
+            // ดักจับข้อผิดพลาดอื่น ๆ ที่ไม่คาดคิด
+            Debug.LogError(
+$"[LOAD FAILED - UNEXPECTED] ข้อผิดพลาดในการโหลด: {e.Message}"
+            );
+        }
+        finally
+        {
+            // ทำงานเสมอ
+            Debug.Log("[FINALLY] กระบวนการโหลดเสร็จสิ้น");
+        }
+        
+        // คืนค่าเริ่มต้นถ้าเกิดข้อผิดพลาดในการโหลด
+        return defaultData;
+    }
+}
