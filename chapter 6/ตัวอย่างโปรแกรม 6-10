@@ -1,0 +1,49 @@
+using UnityEngine;
+using System;
+using Random = UnityEngine.Random; // ใช้ Random ของ Unity สำหรับการสุ่ม
+
+public class TupleDamageCalculator : MonoBehaviour
+{
+    // ตัวแปร public สำหรับกำหนดค่าพื้นฐาน
+    [Tooltip("ความเสียหายพื้นฐานของการโจมตี")]
+    public int baseDamage = 25;
+    
+    [Tooltip("ค่าความแปรปรวน (Variance) ของความเสียหาย")]
+    public int damageVariance = 5;
+
+    void Start()
+    {
+
+        // 1. เรียกใช้เมท็อดที่คืนค่าเป็น Tuple
+        // ใช้ชื่อตัวแปรที่บ่งบอกความหมายเพื่อรับค่าจาก Tuple
+        var (minDmg, maxDmg) = CalculateDamageRange(baseDamage,
+                               damageVariance);
+
+        Debug.Log("--- รายงานการคำนวณความเสียหาย ---");
+        Debug.Log(
+$"ความเสียหายพื้นฐาน: {baseDamage}, ความแปรปรวน: ±{damageVariance}"
+        );
+        
+        // 2. แสดงผลลัพธ์ที่ได้รับจาก Tuple
+        Debug.Log($"ค่าความเสียหายต่ำสุด (Min Damage): {minDmg}");
+        Debug.Log($"ค่าความเสียหายสูงสุด (Max Damage): {maxDmg}");
+        
+        // 3. ตัวอย่างการใช้ค่าสุ่มจริง (ค่าระหว่าง Min กับ Max)
+        int actualDamage = Random.Range(minDmg, maxDmg + 1); 
+        Debug.Log($"ค่าความเสียหายจริงที่ถูกสุ่ม: {actualDamage}");
+    }
+
+// เมท็อด CalculateDamageRange: คำนวณช่วงความเสียหายและคืนค่าเป็น Tuple
+    private (int MinDamage, int MaxDamage) CalculateDamageRange(int baseDmg, int variance)
+    {
+// คำนวณ Min Damage: ฐาน – ความแปรปรวน
+// ใช้ Math.Max(0,...) เพื่อป้องกันค่าติดลบ
+        int minDmg = Math.Max(0, baseDmg - variance); 
+        
+        // คำนวณ Max Damage: ฐาน + ความแปรปรวน
+        int maxDmg = baseDmg + variance;
+        
+// คืนค่าเป็น Tuple โดยใช้ชื่อฟิลด์ที่กำหนดไว้ (MinDamage, MaxDamage)
+        return (minDmg, maxDmg);
+    }
+}
