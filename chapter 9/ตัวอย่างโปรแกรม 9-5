@@ -1,0 +1,166 @@
+using UnityEngine;
+using System.Collections.Generic;
+
+public class MinesweeperGenerator : MonoBehaviour
+{
+    // กำหนดขนาดกระดานและจำนวนระเบิด
+    private const int WIDTH = 8;
+    private const int HEIGHT = 8;
+    private const int NUMBER_OF_BOMBS = 10;
+
+    // แผนที่กระดาน (Map Grid) โดย -1 คือระเบิด, 0-8 คือจำนวนระเบิดรอบข้าง
+    private int[,] gameGrid = new int[WIDTH, HEIGHT];
+
+    void Start()
+    {
+        Debug.Log("--- เริ่มสร้างกระดาน Minesweeper ขนาด 8x8 (10 ระเบิด)");
+
+        // 1. กำหนดค่าเริ่มต้นให้กับกระดานเป็น 0 ทั้งหมด
+        InitializeGrid();
+
+        // 2. วางระเบิดแบบสุ่ม
+        PlaceBombs();
+
+        // 3. คำนวณจำนวนระเบิดที่อยู่รอบ ๆ
+        CalculateAdjacentBombs();
+
+        // 4. แสดงผลลัพธ์ใน Console
+        PrintGrid();
+        
+        Debug.Log("--- สร้างกระดานเสร็จสมบูรณ์ ---");
+    }
+
+// กำหนดค่าเริ่มต้นของกระดานให้เป็น 0 ทั้งหมด
+    private void InitializeGrid()
+    {
+        // การสร้าง int[,] จะเริ่มต้นด้วย 0 อยู่แล้ว แต่ทำซ้ำเพื่อความชัดเจน
+        for (int x = 0; x < WIDTH; x++)
+        {
+            for (int y = 0; y < HEIGHT; y++)
+            {
+                gameGrid[x, y] = 0;
+            }
+        }
+    }
+
+// วางระเบิดจำนวน 10 ลูกแบบสุ่มบนกระดาน (-1)
+    private void PlaceBombs()
+    {
+        int bombsPlaced = 0;
+        
+        // ใช้ List เพื่อเก็บตำแหน่งที่ว่างทั้งหมด
+        List<Vector2Int> availablePositions = new List<Vector2Int>();
+        for (int x = 0; x < WIDTH; x++)
+        {
+            for (int y = 0; y < HEIGHT; y++)
+            {
+                availablePositions.Add(new Vector2Int(x, y));
+            }
+        }
+
+        while (bombsPlaced < NUMBER_OF_BOMBS)
+        {
+            // สุ่มเลือกตำแหน่งจาก List ที่มี
+            int randomIndex = Random.Range(0, availablePositions.Count);
+            Vector2Int bombPos = availablePositions[randomIndex];
+
+            // วางระเบิด (-1) และลบตำแหน่งนั้นออกจาก List ที่ว่าง
+            gameGrid[bombPos.x, bombPos.y] = -1;
+            availablePositions.RemoveAt(randomIndex);
+
+            bombsPlaced++;
+        }
+        
+        Debug.Log($"2. วางระเบิด {NUMBER_OF_BOMBS} ลูกเสร็จสมบูรณ์");
+    }
+
+// คำนวณจำนวนระเบิดที่อยู่รอบ ๆ แต่ละจุด
+// โดยจะใช้ระเบิดแต่ละลูกในการอัปเดตค่าของเพื่อนบ้าน
+    private void CalculateAdjacentBombs()
+    {
+        for (int x = 0; x < WIDTH; x++)
+        {
+            for (int y = 0; y < HEIGHT; y++)
+            {
+                // ตรวจสอบว่าจุดนี้เป็นระเบิดหรือไม่
+                if (gameGrid[x, y] == -1)
+                {
+                    // ถ้าเป็นระเบิด ให้อัปเดตเพื่อนบ้านทั้ง 8 ทิศ
+                    UpdateNeighbors(x, y);
+                }
+            }
+        }
+        Debug.Log("3. คำนวณจำนวนระเบิดรอบข้างเสร็จสมบูรณ์");
+    }
+
+
+
+ // เมธอดช่วยในการอัปเดตค่าของเพื่อนบ้านรอบ ๆ จุดที่เป็นระเบิด
+    private void UpdateNeighbors(int bombX, int bombY)
+    {
+        // วนลูปตรวจสอบเพื่อนบ้านในรัศมี 3x3 (รวมตัวเอง)
+        for (int dx = -1; dx <= 1; dx++)
+        {
+            for (int dy = -1; dy <= 1; dy++)
+            {
+                // ข้ามจุดของระเบิดเอง (dx=0 และ dy=0)
+                if (dx == 0 && dy == 0)
+                    continue;
+
+                int neighborX = bombX + dx;
+                int neighborY = bombY + dy;
+
+                // ตรวจสอบว่าเพื่อนบ้านอยู่ในขอบเขตของกระดานหรือไม่
+                if (neighborX >= 0 && neighborX < WIDTH && 
+                    neighborY >= 0 && neighborY < HEIGHT)
+                {
+                    // ตรวจสอบว่าจุดเพื่อนบ้านนั้นไม่ใช่ระเบิด
+                    if (gameGrid[neighborX, neighborY] != -1)
+                    {
+                        // เพิ่มจำนวนระเบิดรอบข้าง
+                        gameGrid[neighborX, neighborY]++;
+                    }
+                }
+            }
+        }
+    }
+
+ // แสดงผลลัพธ์ของกระดานใน Unity Console
+    private void PrintGrid()
+    {
+        string gridString = "  ";
+        // แสดงหมายเลขคอลัมน์ด้านบน
+        for (int x = 0; x < WIDTH; x++)
+        {
+            gridString += $"| {x} ";
+        }
+        gridString += "|\n";
+        
+        // แสดงเส้นแบ่ง
+        gridString += "-----------------------------------\n";
+
+        for (int y = 0; y < HEIGHT; y++)
+        {
+            gridString += $"{y} "; // แสดงหมายเลขแถว
+            for (int x = 0; x < WIDTH; x++)
+            {
+                int value = gameGrid[x, y];
+                string cell;
+
+                if (value == -1)
+                {
+                    // ใช้ X หรือ B เพื่อแทนระเบิด (Minesweeper Bomb: X)
+                    cell = " X "; 
+                }
+                else
+                {
+                    cell = $" {value} ";
+                }
+                gridString += $"|{cell}";
+            }
+            gridString += "|\n";
+        }
+
+        Debug.Log("4. แผนที่กระดาน Minesweeper:\n" + gridString);
+    }
+}
