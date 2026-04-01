@@ -1,0 +1,34 @@
+using UnityEngine;
+using System; // จำเป็นสำหรับการใช้ Func<...>
+
+public class LambdaFunctionExample : MonoBehaviour
+{
+    void Start()
+    {
+        Debug.Log("การสาธิต Lambda Expression และ Func Delegate");
+        
+        // 1. นิยาม Func Delegate:
+        // Func<int, int, int> หมายความว่า:
+        // - รับพารามิเตอร์ 2 ตัว ชนิด int
+        // - คืนค่าผลลัพธ์ 1 ตัว ชนิด int
+        
+        // Lambda Expression: (x, y) => x + y
+        // นี่คือเมท็อดที่ไม่มีชื่อซึ่งรับ x, y และคืนค่าผลรวม
+        Func<int, int, int> add = (x, y) => x + y;
+        
+        // 2. เรียกใช้ Func Delegate เสมือนเป็นเมท็อดปกติ
+        int result = add(5, 3); 
+        
+        // 3. แสดงผลลัพธ์
+        Debug.Log($"การเรียกใช้ add(5, 3) คืนค่า: {result}");  
+
+        // ตัวอย่างเพิ่มเติม: Lambda สำหรับการตรวจสอบ (Func<int, bool>)
+        Func<int, bool> isEven = (number) => number % 2 == 0;
+        
+        bool check1 = isEven(10);
+        bool check2 = isEven(7);
+
+        Debug.Log($"10 เป็นเลขคู่หรือไม่: {check1}"); // True
+        Debug.Log($"7 เป็นเลขคู่หรือไม่: {check2}"); // False
+    }
+}
