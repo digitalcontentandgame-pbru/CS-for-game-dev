@@ -1,0 +1,33 @@
+using UnityEngine;
+
+public class ContinueExample : MonoBehaviour
+{
+    // สมมติว่ามีอาร์เรย์ของวัตถุที่อาจถูกเปิดหรือปิด
+    public GameObject[] gameObjects;
+
+    void Start()
+    {
+        ProcessActiveObjects();
+    }
+
+    private void ProcessActiveObjects()
+    {
+        foreach (GameObject obj in gameObjects)
+        {
+// ใช้ GetComponent<Renderer>() เพื่อตรวจสอบว่าวัตถุมี 
+// MeshRenderer หรือไม่ (ตัวอย่างการกรอง)
+            if (obj == null || !obj.activeInHierarchy) 
+            {
+                Debug.LogWarning(
+$"!!! ข้ามการประมวลผลวัตถุ: {obj.name} (Inactive หรือ Null)"
+                );
+                // ข้ามคำสั่งที่เหลือในรอบนี้ และไปเริ่มรอบต่อไปทันที
+                continue; 
+            }
+
+            // คำสั่งที่เหลือจะถูกดำเนินการเฉพาะวัตถุที่ Active เท่านั้น
+            Debug.Log($"[/] กำลังประมวลผลวัตถุที่ทำงาน: {obj.name}");
+// obj.GetComponent<Renderer>().material.color = Color.green;
+        }
+    }
+}
