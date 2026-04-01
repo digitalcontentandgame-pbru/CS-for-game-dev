@@ -1,0 +1,32 @@
+public class PlayerScore
+{
+    public string Name;
+    public int Score;
+
+    public PlayerScore(string name, int score)
+    {
+        Name = name;
+        Score = score;
+    }
+}
+
+public class Leaderboard
+{
+    private List<PlayerScore> scores = new List<PlayerScore>();
+
+    public void AddScore(string name, int score)
+    {
+        scores.Add(new PlayerScore(name, score));
+    }
+
+    public void ShowTopScores()
+    {
+        var sorted = scores.OrderByDescending(s => s.Score).ToList();
+        
+        Console.WriteLine("=== Leaderboard ===");
+        foreach (var entry in sorted)
+        {
+            Console.WriteLine($"{entry.Name} : {entry.Score}");
+        }
+    }
+}
