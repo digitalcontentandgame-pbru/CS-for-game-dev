@@ -1,0 +1,4 @@
+int a = 10, b = 20;
+string s = "Sum = " + (a + b);
+string sFmt = string.Format("Sum = {0}", a + b);
+string sInterp = $"Sum = {a + b}";
