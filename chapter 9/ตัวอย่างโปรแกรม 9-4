@@ -1,0 +1,179 @@
+using UnityEngine;
+
+public class TicTacToe : MonoBehaviour
+{
+    private char[,] board = new char[3, 3];
+    private bool playerTurn = true;
+    private bool gameOver = false;
+
+    void Start()
+    {
+        InitializeBoard();
+        DisplayBoard();
+        Debug.Log("Game Start - Player (X) begins.");
+    }
+
+    void Update()
+    {
+        if (gameOver) 
+        {
+            return;
+        }
+
+        if (playerTurn)
+        {
+            if (Input.GetKeyDown(KeyCode.Alpha1)) PlayerMove(0, 0);
+            if (Input.GetKeyDown(KeyCode.Alpha2)) PlayerMove(0, 1);
+            if (Input.GetKeyDown(KeyCode.Alpha3)) PlayerMove(0, 2);
+
+            if (Input.GetKeyDown(KeyCode.Alpha4)) PlayerMove(1, 0);
+            if (Input.GetKeyDown(KeyCode.Alpha5)) PlayerMove(1, 1);
+            if (Input.GetKeyDown(KeyCode.Alpha6)) PlayerMove(1, 2);
+
+            if (Input.GetKeyDown(KeyCode.Alpha7)) PlayerMove(2, 0);
+            if (Input.GetKeyDown(KeyCode.Alpha8)) PlayerMove(2, 1);
+            if (Input.GetKeyDown(KeyCode.Alpha9)) PlayerMove(2, 2);
+        }
+    }
+
+    void InitializeBoard()
+    {
+        for (int i = 0; i < 3; i++)
+        {
+
+            for (int j = 0; j < 3; j++)
+            {
+                board[i, j] = ' ';
+            }
+        }
+    }
+
+
+    void DisplayBoard()
+    {
+        Debug.Log("-------------");
+        for (int i = 0; i < 3; i++)
+        {
+            string row = "| ";
+            for (int j = 0; j < 3; j++)
+            {
+                row += board[i, j] + " | ";
+            }
+            Debug.Log(row);
+            Debug.Log("-------------");
+        }
+    }
+
+    void PlayerMove(int row, int col)
+    {
+        if (!playerTurn || gameOver) 
+        {
+            return;
+        }
+
+        if (board[row, col] == ' ')
+        {
+            board[row, col] = 'X';
+            Debug.Log($"Player places X at ({row},{col})");
+            playerTurn = false;
+            CheckState();
+        }
+        else
+        {
+            Debug.Log("Invalid move. Position already taken.");
+        }
+    }
+
+    void ComputerMove()
+    {
+        Debug.Log("Computer is thinking...");
+        int row, col;
+        System.Random rand = new System.Random();
+
+        while (true)
+        {
+            row = rand.Next(0, 3);
+            col = rand.Next(0, 3);
+
+            if (board[row, col] == ' ')
+            {
+                board[row, col] = 'O';
+                Debug.Log($"Computer places O at ({row},{col})");
+                break;
+            }
+        }
+        playerTurn = true;
+        CheckState();
+    }
+
+    void CheckState()
+    {
+        char winner = CheckWinner();
+
+        DisplayBoard();
+
+        if (winner == 'X')
+        {
+            Debug.Log("Player Wins!");
+            gameOver = true;
+            return;
+        }
+
+        if (winner == 'O')
+        {
+            Debug.Log("Computer Wins!");
+            gameOver = true;
+            return;
+        }
+
+        if (IsBoardFull())
+        {
+            Debug.Log("Draw!");
+            gameOver = true;
+            return;
+        }
+
+        if (!playerTurn)
+        {
+            // ดีเลย์คอม (optional)
+            Invoke("ComputerMove", 0.5f);
+        }
+    }
+
+    char CheckWinner()
+    {
+        // Rows and Columns
+        for (int i = 0; i < 3; i++)
+        {
+            if (board[i, 0] != ' ' &&
+                board[i, 0] == board[i, 1] &&
+                board[i, 1] == board[i, 2])
+                return board[i, 0];
+
+            if (board[0, i] != ' ' &&
+                board[0, i] == board[1, i] &&
+                board[1, i] == board[2, i])
+                return board[0, i];
+        }
+
+        // Diagonals
+        if (board[0, 0] != ' ' &&
+            board[0, 0] == board[1, 1] &&
+            board[1, 1] == board[2, 2])
+            return board[0, 0];
+
+        if (board[0, 2] != ' ' &&
+            board[0, 2] == board[1, 1] &&
+            board[1, 1] == board[2, 0])
+            return board[0, 2];
+
+        return ' ';
+    }
+
+    bool IsBoardFull()
+    {
+        foreach (char c in board)
+            if (c == ' ') return false;
+        return true;
+    }
+}
