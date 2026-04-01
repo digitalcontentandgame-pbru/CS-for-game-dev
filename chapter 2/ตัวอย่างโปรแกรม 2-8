@@ -1,0 +1,48 @@
+using UnityEngine;
+using System;
+
+public class DebugLogExamples : MonoBehaviour
+{
+
+    void Start()
+    {
+        // ข้อความธรรมดา
+        Debug.Log("Game started.");
+
+        // ข้อความรูปแบบ (format)
+        int score = 42;
+        Debug.LogFormat("Initial score = {0}", score);
+
+        // แนบ context สามารถคลิกใน Console เพื่อนำไปยัง GameObject นี้
+        Debug.Log("Player initialized", this);
+
+        // Warning และ Error
+        Debug.LogWarning(
+            "This is a warning: missing texture.");
+
+        Debug.LogError(
+            "This is an error: invalid configuration.");
+
+        // จับ exception และส่งเป็น LogException
+        try
+        {
+            ThrowTestException();
+        }
+        catch (Exception ex)
+        {
+            Debug.LogException(ex); // จะแสดง stack trace ของ ex
+        }
+
+        // ปิด logging ในกรณี build สุดท้ายเพื่อประสิทธิภาพ
+        if (!Debug.isDebugBuild)
+        {
+            Debug.unityLogger.logEnabled = false;
+        }
+    }
+
+    void ThrowTestException()
+    {
+        throw new InvalidOperationException(
+        "ตัวอย่างข้อผิดพลาดสำหรับทดสอบ");
+    }
+}
