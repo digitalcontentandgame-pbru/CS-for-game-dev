@@ -1,0 +1,13 @@
+using UnityEngine; 
+public class ชื่อคลาสที่ตรงกับชื่อสคริปต์ : MonoBehaviour
+{
+    // ทำครั้งเดียวเมื่อถูกสร้าง
+    void Start()
+    {       
+    }
+
+    // ทำก่อนอัพเดตแต่ละเฟรม
+    void Update()
+    {
+    }
+}
