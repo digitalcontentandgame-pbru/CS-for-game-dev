@@ -1,0 +1,9 @@
+void Update()
+{
+    // หลีกเลี่ยงการเรียก Debug.Log ทุกเฟรมเป็นแสดงทุก 300 เฟรม
+    if (Time.frameCount % 300 == 0)
+    {
+        Debug.LogFormat("Frame: {0}, PlayerPos: {1}", 
+                        Time.frameCount, transform.position);
+    }
+}
