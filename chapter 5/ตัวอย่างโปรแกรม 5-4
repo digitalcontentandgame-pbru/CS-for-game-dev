@@ -1,0 +1,53 @@
+using UnityEngine;
+
+public class ForLoopExample : MonoBehaviour
+{
+    // ตัวแปร public เพื่อกำหนดค่าเริ่มต้นการนับถอยหลัง
+    [Tooltip("จำนวนรอบสูงสุดสำหรับการวนซ้ำ")]
+    public int maxCount = 5;
+
+    // อาร์เรย์ตัวอย่างสำหรับประมวลผล
+    private string[] playerNames = { 
+                        "Alice", "Bob", "Charlie", "David" 
+                     };
+
+    void Start()
+    {
+        PerformCountdown();
+        ProcessArrayElements();
+    }
+
+    // ตัวอย่างการใช้ for loop สำหรับการนับถอยหลัง
+    public void PerformCountdown()
+    {
+        Debug.Log("--- เริ่มการนับถอยหลัง ---");
+
+        // 1. Initialization: int i = maxCount (i = 5)
+        // 2. Condition: i > 0
+        // 3. Iterator: i-- (ลดลงทีละ 1)
+        for (int i = maxCount; i > 0; i--)
+        {
+            Debug.Log($"Countdown: {i}...");
+        }
+
+        Debug.Log("GO! (สิ้นสุดการนับถอยหลัง)");
+    }
+
+    // ตัวอย่างการใช้ for loop เพื่อเข้าถึงทุกองค์ประกอบในอาร์เรย์ตามดัชนี
+    public void ProcessArrayElements()
+    {
+        Debug.Log("--- เริ่มการประมวลผลอาร์เรย์ ---");
+// 1. Initialization: int i = 0
+// 2. Condition: i < playerNames.Length (ตราบใดที่ดัชนียังอยู่ในขอบเขต)
+// 3. Iterator: i++ (เพิ่มดัชนีทีละ 1)
+        for (int i = 0; i < playerNames.Length; i++)
+        {
+            string name = playerNames[i];
+            
+            // แสดงผลชื่อผู้เล่นพร้อมดัชนี
+            Debug.Log($"ผู้เล่นที่ดัชนี {i}: {name}");
+        }
+
+        Debug.Log("ประมวลผลอาร์เรย์เสร็จสิ้น.");
+    }
+}
