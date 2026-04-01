@@ -1,0 +1,24 @@
+using UnityEngine;
+
+public class EnemyManager : MonoBehaviour
+{
+    // สมมติว่ามีอาร์เรย์เก็บวัตถุศัตรู
+    public GameObject[] enemies;
+
+    public void ProcessAllEnemies()
+    {
+        // 1. Initialization: int i = 0
+        // 2. Condition: i น้อยกว่าจำนวนศัตรูทั้งหมด
+        // 3. Iterator: i เพิ่มขึ้นทีละ 1
+        for (int i = 0; i < enemies.Length; i++)
+        {
+            GameObject currentEnemy = enemies[i];
+            
+// สั่งให้ศัตรูตัวที่ i ทำการตรวจสอบผู้เล่น
+// ตัวอย่าง: การเรียกเมท็อดบน Component ของศัตรู
+// currentEnemy.GetComponent<EnemyScript>().CheckPlayerDistance(); 
+            
+            Debug.Log($"ศัตรูตัวที่ {i}: ตรวจสอบสถานะการต่อสู้");
+        }
+    }
+}
