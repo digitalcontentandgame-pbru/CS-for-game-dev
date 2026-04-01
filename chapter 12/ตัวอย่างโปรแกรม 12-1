@@ -1,0 +1,9 @@
+if (inputData <= 0)
+{
+    // โยนข้อยกเว้นประเภท ArgumentException
+    throw new ArgumentException("ค่าที่ใส่เข้ามาต้องเป็นจำนวนเต็มบวกเท่านั้น");
+}
+if (hp <= 0)
+{
+    throw new Exception("HP ไม่สามารถเป็นค่าติดลบได้");
+}
