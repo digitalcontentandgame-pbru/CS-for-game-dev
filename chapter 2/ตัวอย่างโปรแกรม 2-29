@@ -1,0 +1,87 @@
+using UnityEngine;
+
+public class BattleSystem : MonoBehaviour
+{
+    // ข้อมูลผู้เล่น
+    private int playerHealth = 100;
+    private int playerScore = 0;
+    private bool playerActive = true;
+    private int playerStrength = 20; // ความแข็งแกร่งของผู้เล่น 
+
+    // ข้อมูลศัตรู (Slime)
+    private int slimeHealth = 50;
+    private int slimeScore = 0;
+    private bool slimeActive = true;
+    private int slimeStrength = 15; // ความแข็งแกร่งของ Slime 
+
+    // ติดตามรอบการโจมตี
+    private bool isPlayerTurn = true;
+    private bool battleOver = false;
+
+    void Update()
+    {
+        if (battleOver) return;
+        // กด Space เพื่อเริ่มแต่ละ Turn
+        if (Keyboard.current.Space.isPressed))
+        {
+            if (isPlayerTurn)
+            {
+                PlayerAttack();
+            }
+            else
+            {
+                SlimeAttack();
+            }
+
+            isPlayerTurn = !isPlayerTurn; // สลับรอบ
+            ReportStatus();
+            CheckBattleOver();
+        }
+    }
+
+    void PlayerAttack()
+    {
+// สุ่มค่าโจมตี 1 ถึง playerStrength
+        int damage = Random.Range(1, playerStrength + 1); 
+        slimeHealth -= damage;
+        if (slimeHealth < 0) slimeHealth = 0;
+        playerScore += damage;
+        Debug.Log(
+           "Player attacks Slime dealing " + damage + " damage!"
+        );
+    }
+
+    void SlimeAttack()
+    {
+// สุ่มค่าโจมตี 1 ถึง slimeStrength
+        int damage = Random.Range(1, slimeStrength + 1); 
+        playerHealth -= damage;
+        if (playerHealth < 0) playerHealth = 0;
+        slimeScore += damage;
+        Debug.Log(
+          "Slime attacks Player, dealing " + damage + " damage!"
+        );
+    }
+
+    void ReportStatus()
+    {
+        Debug.Log(
+             "Current Status: Player HP=" + playerHealth + 
+             ", Slime HP=" + slimeHealth
+        );
+    }
+
+    void CheckBattleOver()
+    {
+        if (playerHealth <= 0)
+        {
+            battleOver = true;
+            Debug.Log("Player loses, Slime wins!");
+        }
+        else if (slimeHealth <= 0)
+        {
+            battleOver = true;
+            Debug.Log("Player wins, Slime loses!");
+        }
+    }
+}
