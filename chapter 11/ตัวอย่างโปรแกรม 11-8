@@ -1,0 +1,8 @@
+void Start()
+{
+    Character player = new Warrior("Arthur", 100, 20);
+    Character enemy = new Enemy("Slime", 50, 3);
+
+    player.Attack(enemy);
+    enemy.Attack(player);
+}
