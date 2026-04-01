@@ -1,0 +1,20 @@
+using UnityEngine;
+
+public class NumberInputExample : MonoBehaviour
+{
+    [Tooltip("ใส่ข้อความจำลองค่าที่ผู้ใช้กรอก เช่น '123' หรือ 'abc'")]
+    public string strNumber = "123"; // ป้อนค่าทดสอบจาก Inspector
+
+    void Start()
+    {
+        try
+        {
+            int number = int.Parse(strNumber);
+            Debug.Log("กรุณากรอกตัวเลข : " + number);
+        }
+        catch (System.FormatException)
+        {
+            Debug.Log("โปรดกรอกข้อมูลเป็นตัวเลขเท่านั้น");
+        }
+    }
+}
