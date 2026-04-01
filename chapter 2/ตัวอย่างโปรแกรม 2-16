@@ -1,0 +1,6 @@
+string password = ""; // สตริงว่างเปล่า (Empty)
+
+if (password.Length == 0)
+{
+    Debug.Log("password is an empty string");
+}
