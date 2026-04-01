@@ -1,0 +1,19 @@
+public class Mage : Character
+{
+    public int MagicPower { get; private set; }
+
+    public Mage(string name, int maxHP, int magicPower)
+        : base(name, maxHP)
+    {
+        MagicPower = magicPower;
+    }
+
+    public override void Attack(Character target)
+    {
+        int damage = MagicPower * 2;
+        target.HP -= damage;
+        UnityEngine.Debug.Log(
+$"{Name} ใช้เวทมนต์สร้างความเสียหาย {damage}"
+        );
+    }
+}
