@@ -1,0 +1,44 @@
+public class PlayerScore
+{
+    public string playerName;
+    public int score;
+}
+
+public class LeaderboardManager : MonoBehaviour
+{
+    // เก็บรายการคะแนน
+    private List<PlayerScore> leaderboard = new List<PlayerScore>(); 
+
+    public void AddNewScore(string name, int score)
+    {
+        leaderboard.Add(new PlayerScore { playerName = name, 
+                                          score = score });
+        
+// การจัดการขนาดแบบไดนามิก: ตรวจสอบจำนวนผู้เล่นและลบผู้เล่นที่คะแนนต่ำสุด
+// หากรายการเกินขนาดที่กำหนด
+        if (leaderboard.Count > 10)
+        {
+// จัดเรียงรายการ: ใช้ lambda expression เพื่อจัดเรียงจากคะแนนน้อยไปมาก
+            leaderboard.Sort((p1, p2) =>
+                p1.score.CompareTo(p2.score)); 
+            
+            // ลบผู้เล่นที่คะแนนน้อยที่สุด (ซึ่งอยู่ตำแหน่งดัชนี 0 หลังการเรียง)
+            leaderboard.RemoveAt(0); 
+        }
+        
+        // จัดเรียงรายการ: จัดเรียงใหม่จากคะแนนมากไปน้อยสำหรับการแสดงผล
+        leaderboard.Sort((p1, p2) => p2.score.CompareTo(p1.score)); 
+    }
+
+    public void DisplayTopScores()
+    {
+        // การเข้าถึงตามดัชนี: แสดงผลผู้เล่น 3 อันดับแรก
+        for (int i = 0; i < Mathf.Min(3, leaderboard.Count); i++)
+        {
+            Debug.Log(
+$"Rank {i + 1}: "+
+$"{leaderboard[i].playerName} - Score: {leaderboard[i].score}"
+);
+        }
+    }
+}
