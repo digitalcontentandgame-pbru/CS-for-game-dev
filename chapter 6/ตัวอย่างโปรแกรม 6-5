@@ -1,0 +1,25 @@
+using UnityEngine;
+
+public class PiConverter : MonoBehaviour
+{
+    void Start()
+    {
+        // เรียกใช้เมท็อดเพื่อรับค่าคงที่
+        float piOver180 = PiOver180();
+        
+        // แสดงผลลัพธ์ใน Unity Console
+        Debug.Log($"ค่าคงที่ Pi/180 คือ: {piOver180}");
+        
+        // ตัวอย่างการใช้: แปลง 90 องศาเป็นเรเดียน
+        float degrees = 90.0f;
+        float radians = degrees * piOver180;
+        Debug.Log($"{degrees} องศา เท่ากับ {radians:F4} เรเดียน");
+    }
+
+    // เมท็อด PiOver180(): คำนวณค่า Pi/180.0f และส่งค่า float กลับมา
+    private float PiOver180()
+    {
+        // คำนวณและส่งค่ากลับ
+        return (Mathf.PI / 180.0f);
+    }
+}
