@@ -1,0 +1,68 @@
+using System.Collections.Generic;
+using System.Linq;
+
+public class Inventory
+{
+    private List<InventorySlot> slots;
+
+    public int Capacity { get; private set; }
+
+    public Inventory(int capacity)
+    {
+        Capacity = capacity;
+        slots = new List<InventorySlot>(capacity);
+    }
+
+    // เพิ่มไอเทมเข้าคลัง
+    public void AddItem(Item item, int quantity)
+    {
+        // 1) ลองเติมในช่องที่มีไอเทมชนิดเดียวกันอยู่แล้ว (ถ้ายังไม่เต็ม)
+        foreach (var slot in slots)
+        {
+            if (slot.Item.Id == item.Id && !slot.IsFull)
+            {
+                int canAdd = slot.RemainingSpace;
+                int toAdd = System.Math.Min(canAdd, quantity);
+                slot.AddQuantity(toAdd);
+                quantity -= toAdd;
+
+                if (quantity <= 0)
+                    return; // เพิ่มครบแล้ว
+            }
+        }
+
+        // 2) หากยังมีจำนวนเหลือ และมีช่องว่าง สามารถสร้างช่องใหม่
+        while (quantity > 0 && slots.Count < Capacity)
+        {
+            int toAdd = System.Math.Min(item.MaxStack, quantity);
+            slots.Add(new InventorySlot(item, toAdd));
+            quantity -= toAdd;
+        }
+
+        // 3) ถ้ายังเหลือแสดงว่าไม่มีช่องพอ
+        if (quantity > 0)
+        {
+            // ในเกมจริงอาจจะแจ้งเตือนผู้เล่นว่า "Inventory เต็ม"
+            UnityEngine.Debug.LogWarning(
+$"ไม่สามารถเก็บ {item.Name} ได้ครบ เหลือ {quantity}"
+            );
+        }
+    }
+
+    // แสดงข้อมูลคลังไอเทม
+    public void PrintInventory()
+    {
+        UnityEngine.Debug.Log("=== INVENTORY ===");
+        foreach (var slot in slots)
+        {
+            UnityEngine.Debug.Log(
+$"{slot.Item.Name} x {slot.Quantity}"
+            );
+        }
+    }
+
+    public List<InventorySlot> GetAllSlots()
+    {
+        return slots;
+    }
+}
