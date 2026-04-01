@@ -1,0 +1,22 @@
+using UnityEngine; 
+
+public class UnityGreetingScript : MonoBehaviour
+{
+
+    // ตัวแปร public สามารถถูกแก้ไขได้ใน Unity Inspector
+    // ใช้เพื่อกำหนดข้อความที่ต้องการแสดง
+    [Tooltip("ข้อความที่ต้องการแสดงใน Console")]
+    public string greetingMessage = "Hello, World!"; 
+
+    void Start()
+    {       
+    }
+
+    void Update()
+    {
+        if (Keyboard.current.Space.isPressed)
+        {
+             Debug.Log(greetingMessage);
+        }
+    }
+}
