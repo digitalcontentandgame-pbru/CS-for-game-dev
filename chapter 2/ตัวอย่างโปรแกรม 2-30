@@ -1,0 +1,131 @@
+using UnityEngine;
+
+public class BattleSystem : MonoBehaviour
+{
+    // ข้อมูลผู้เล่น
+    private int playerHealth = 100;
+    private int playerScore = 0;
+    private int playerStrength = 20; // ความแข็งแกร่ง
+    private int playerDodgeChance = 20; // % โอกาสหลบ 
+    private int playerSpecialChance = 25; // % โอกาสโจมตีพิเศษ 
+    private int playerSpecialMultiplier = 2; // ตัวคูณความแรงโจมตีพิเศษ
+
+    // ข้อมูลศัตรู (Slime)
+    private int slimeHealth = 50;
+    private int slimeScore = 0;
+    private int slimeStrength = 15;
+    private int slimeDodgeChance = 15;
+    private int slimeSpecialChance = 20;
+    private int slimeSpecialMultiplier = 2;
+
+    // ติดตามรอบการโจมตี
+    private bool isPlayerTurn = true;
+    private bool battleOver = false;
+
+    void Update()
+    {
+        if (battleOver) 
+        {
+            return;
+        }
+
+
+        if (Keyboard.current.Space.isPressed))
+        {
+            if (isPlayerTurn)
+            {
+                PlayerAttack();
+            }
+            else
+            {
+                SlimeAttack();
+            }
+
+            isPlayerTurn = !isPlayerTurn; // สลับรอบ
+            ReportStatus();
+            CheckBattleOver();
+        }
+    }
+
+    void PlayerAttack()
+    {
+        // ตรวจสอบว่า Slime หลบหรือไม่
+        if (Random.Range(1, 101) <= slimeDodgeChance)
+        {
+            Debug.Log("Slime, dodge the Player's attacks!");
+            return;
+        }
+
+        int damage = Random.Range(1, playerStrength + 1);
+
+        // ตรวจสอบ Special Attack
+        if (Random.Range(1, 101) <= playerSpecialChance)
+        {
+            damage *= playerSpecialMultiplier;
+            Debug.Log("Player uses Special Attack!");
+        }
+
+        slimeHealth -= damage;
+        if (slimeHealth < 0) 
+        {
+            slimeHealth = 0;
+        }
+        playerScore += damage;
+
+        Debug.Log(
+            "Player attacks Slime dealing " + 
+            damage + " damage!"
+        );
+    }
+
+    void SlimeAttack()
+    {
+        if (Random.Range(1, 101) <= playerDodgeChance)
+        {
+            Debug.Log("Player, dodge the Slime's attack!");
+            return;
+        }
+
+        int damage = Random.Range(1, slimeStrength + 1);
+
+        if (Random.Range(1, 101) <= slimeSpecialChance)
+        {
+            damage *= slimeSpecialMultiplier;
+            Debug.Log("Slime, use Special Attack!");
+        }
+
+        playerHealth -= damage;
+        if (playerHealth < 0) 
+        {
+            playerHealth = 0;
+        }
+        slimeScore += damage;
+
+        Debug.Log(
+            "Slime attacks Player, dealing " +
+            damage + " damage!"
+        );
+    }
+
+    void ReportStatus()
+    {
+        Debug.Log(
+            "Current Status: Player HP=" + playerHealth +
+            ", Slime HP=" + slimeHealth
+        );
+    }
+
+    void CheckBattleOver()
+    {
+        if (playerHealth <= 0)
+        {
+            battleOver = true;
+            Debug.Log("Player loses, Slime wins!");
+        }
+        else if (slimeHealth <= 0)
+        {
+            battleOver = true;
+            Debug.Log("Player wins, Slime loses!");
+        }
+    }
+}
