@@ -1,0 +1,198 @@
+using UnityEngine;
+
+// คลาสแม่ (Base Class)
+public class Actor
+{
+// [PUBLIC] เข้าถึงได้จากทุกที่, Visible ใน Inspector ถ้าเป็น MonoBehaviour
+    public string actorName;
+    
+// [PROTECTED] เข้าถึงได้เฉพาะคลาส Actor และคลาสลูก 
+// (Human, Elf, Goblin) เท่านั้น
+// ใช้สำหรับค่าที่คลาสลูกจำเป็นต้องทราบเพื่อกำหนดคุณสมบัติของตนเอง
+    protected int baseMaxHealth = 100;
+    protected string faction = "Neutral";
+    
+// [PRIVATE] เข้าถึงได้เฉพาะภายในคลาส Actor เท่านั้น
+    private int currentLevel = 1;
+    private bool isAlive = true; 
+
+// Public Property สำหรับให้สคริปต์อื่นอ่านค่า Level ได้เท่านั้น (อ่านอย่างเดียว)
+    public int Level => currentLevel;
+    
+// ตัวแปรที่เก็บพลังชีวิตปัจจุบัน ซึ่งคลาสลูกสามารถปรับได้ผ่านเมท็อด
+    protected int currentHealth; 
+
+// Constructor: กำหนดค่าเริ่มต้นเมื่อสร้างวัตถุ
+    public Actor(string name)
+    {
+        this.actorName = name;
+        this.currentHealth = baseMaxHealth;
+    }
+
+// [PUBLIC] เมท็อดที่คลาสภายนอกสามารถเรียกใช้ได้
+    public virtual void TakeDamage(int damage)
+    {
+        if (!isAlive) return;
+
+        currentHealth -= damage;
+        
+        Debug.Log(
+$"[{actorName}] ได้รับความเสียหาย {damage} หน่วย. "+
+$"HP เหลือ {currentHealth}"
+        );
+
+        if (currentHealth <= 0)
+        {
+            Die();
+        }
+    }
+
+// [PROTECTED] เมท็อดที่คลาสลูกสามารถเรียกใช้ได้
+    protected void LevelUp()
+    {
+        currentLevel++;
+        Debug.Log($"[{actorName}] เลเวลอัพเป็น {currentLevel}!");
+    }
+
+// [PRIVATE] เมท็อดที่ใช้สำหรับจัดการภายในคลาสเท่านั้น
+    private void Die()
+    {
+        isAlive = false;
+        Debug.Log($" T_T {actorName} พ่ายแพ้แล้ว T_T");
+    }
+
+
+
+
+// [PUBLIC] เมท็อดที่คลาสลูกจะต้อง Override เพื่อแสดงพฤติกรรมเฉพาะ
+    public virtual void Attack()
+    {
+        Debug.Log($"[{actorName}] โจมตีด้วยท่าทางทั่วไป");
+    }
+}
+
+// คลาสลูก 1: Human
+public class Human : Actor
+{
+    // Private field ของคลาสลูก Human เท่านั้น
+    private string humanSkill = "FastLearner"; 
+
+    public Human(string name) : base(name)
+    {
+        // สามารถเข้าถึงและกำหนดค่า protected จากคลาสแม่ได้
+        this.faction = "Alliance";
+        this.baseMaxHealth = 120; // Human มี HP มากกว่าปกติ
+        this.currentHealth = 120;
+    }
+
+    public override void Attack()
+    {
+        Debug.Log($"[{actorName} (Human)] ใช้ดาบฟันศัตรู!");
+        
+        // สามารถเรียกใช้ protected method ของคลาสแม่ได้
+        LevelUp(); 
+    }
+
+    // ลองเข้าถึง private ของคลาสแม่ (จะ Error ถ้าไม่ถูกคอมเมนต์)
+    /*
+    public void TestAccess()
+    {
+// ERROR: 'currentLevel' เป็น private
+        int lvl = currentLevel; 
+    }
+    */
+}
+
+
+
+
+
+
+
+// คลาสลูก 2: Elf
+public class Elf : Actor
+{
+    public Elf(string name) : base(name)
+    {
+        this.faction = "NatureGuard";
+        // Elf มี HP น้อยกว่าปกติ
+        this.baseMaxHealth = 80;
+        this.currentHealth = 80;
+    }
+
+    public override void Attack()
+    {
+        Debug.Log(
+$"[{actorName} (Elf)] ยิงธนูเล็งหัวด้วยความแม่นยำสูง!"
+           );
+    }
+}
+
+
+// คลาสลูก 3: Goblin
+public class Goblin : Actor
+{
+    public Goblin(string name) : base(name)
+    {
+        this.faction = "Horde";
+        // Goblin มี HP เท่ากับ Base
+    }
+
+// Goblin มีเมท็อดพิเศษที่สามารถเรียกใช้ protected field ของคลาสแม่ได้
+    public void ReportStatus()
+    {
+// 'faction' และ 'currentHealth' เป็น protected แต่เข้าถึงได้
+        Debug.Log(
+$"[{actorName} (Goblin)] อยู่ฝ่าย: {faction}, HP: {currentHealth}"
+        ); 
+    }
+}
+
+// คลาสสำหรับรันการจำลองใน Unity
+public class InheritanceExampleRunner : MonoBehaviour
+{
+    void Start()
+    {
+        // 1. สร้างวัตถุจากคลาสลูก
+        Human player = new Human("Captain Rex");
+        Elf archer = new Elf("Legolas");
+        Goblin enemy = new Goblin("Grumpy");
+
+        Debug.Log("\n--- รายงานสถานะเริ่มต้น ---");
+        player.ReportStatus();
+        archer.ReportStatus();
+        enemy.ReportStatus();
+        
+        // 2. การสาธิตการเข้าถึง (Access Demonstration)
+        Debug.Log("\n--- การสาธิตการเข้าถึงคุณสมบัติ ---");
+
+// [PUBLIC] สคริปต์ภายนอก (Runner) เข้าถึง public property ได้
+        Debug.Log($"ชื่อ Player (Public): {player.actorName}");
+        
+// [PUBLIC PROPERTY] สคริปต์ภายนอกอ่าน Level ได้
+        Debug.Log(
+$"Level Player (Public Read-Only): {player.Level}"
+        );
+        
+// [PROTECTED] สคริปต์ภายนอกเข้า protected โดยตรงไม่ได้
+// Error: 'faction' เป็น protected
+        // Debug.Log(player.faction); 
+
+        // 3. การสาธิต Polymorphism และการสื่อสาร
+        Debug.Log("\n--- การจำลองการต่อสู้ ---");
+
+        // เมท็อด Attack จะเรียกเวอร์ชันเฉพาะของแต่ละคลาส
+// Human Attack, ตามด้วย LevelUp (protected call)
+        player.Attack();  
+        archer.Attack();  // Elf Attack
+
+// Human (คลาสลูก) ได้รับความเสียหายผ่านเมท็อด public ของคลาสแม่
+        player.TakeDamage(25);
+// จะทำให้ HP <= 0 และเรียก private method Die()
+        player.TakeDamage(100); 
+        
+// Goblin รายงานสถานะ (แสดงการเข้าถึง protected field ภายในเมท็อด public)
+        enemy.ReportStatus();
+    }
+}
+
