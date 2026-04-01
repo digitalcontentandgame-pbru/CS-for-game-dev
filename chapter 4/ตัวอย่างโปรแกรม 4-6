@@ -1,0 +1,51 @@
+using UnityEngine;
+
+public class DayOfWeekSwitcher : MonoBehaviour
+{
+// ตัวแปร public เพื่อกำหนดค่าวันใน Unity Inspector (1=อาทิตย์, 7=เสาร์)
+    [Tooltip("กรอกวันในสัปดาห์ (1-7)")]
+    [Range(1, 7)] // จำกัดค่าใน Inspector ให้กรอกได้ระหว่าง 1 ถึง 7
+    public int dayOfWeek = 1; 
+
+    // เมท็อด Start() จะถูกเรียกครั้งแรกเมื่อสคริปต์เริ่มต้นทำงาน
+    void Start()
+    {
+        DisplayDayOfWeek();
+    }
+
+    public void DisplayDayOfWeek()
+    {
+        // ใช้โครงสร้าง switch เพื่อตรวจสอบค่าของ dayOfWeek
+        switch (dayOfWeek)
+        {
+            case 1:
+                Debug.Log($"วันนี้: วันอาทิตย์ (Sunday)");
+                break;
+            case 2:
+                Debug.Log($"วันนี้: วันจันทร์ (Monday)");
+                break;
+            case 3:
+                Debug.Log($"วันนี้: วันอังคาร (Tuesday)");
+                break;
+            case 4:
+                Debug.Log($"วันนี้: วันพุธ (Wednesday)");
+                break;
+            case 5:
+                Debug.Log($"วันนี้: วันพฤหัสบดี (Thursday)");
+                break;
+            case 6:
+                Debug.Log($"วันนี้: วันศุกร์ (Friday)");
+                break;
+            case 7:
+                Debug.Log($"วันนี้: วันเสาร์ (Saturday)");
+                break;
+
+
+            default:
+// ใช้สำหรับกรณีที่ค่า dayOfWeek อยู่นอกเหนือช่วง 1-7
+                Debug.LogWarning(
+                   $"ค่า {dayOfWeek} ไม่ใช่วันในสัปดาห์ที่ถูกต้อง (1-7)");
+                break;
+        }
+    }
+}
