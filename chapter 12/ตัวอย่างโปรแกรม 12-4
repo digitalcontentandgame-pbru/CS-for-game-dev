@@ -1,0 +1,77 @@
+using System;
+using System.IO;
+using UnityEngine;
+
+
+
+public static class SaveLoadManager
+{
+    private static string filePath = "player_data.txt";
+
+    // บันทึกข้อมูลลงไฟล์
+    public static void SavePlayer(PlayerData data)
+    {
+        try
+        {
+            string text =
+                $"Name={data.Name}\n" +
+                $"Score={data.Score}\n" +
+                $"Level={data.Level}";
+
+            File.WriteAllText(filePath, text);
+            Debug.Log("บันทึกข้อมูลเรียบร้อย");
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError("เกิดข้อผิดพลาดขณะบันทึกไฟล์: " + ex.Message);
+        }
+        finally
+        {
+            Debug.Log("คำสั่ง SavePlayer สิ้นสุดการทำงาน");
+        }
+    }
+
+    // โหลดข้อมูลจากไฟล์
+    public static PlayerData LoadPlayer()
+    {
+        try
+        {
+            if (!File.Exists(filePath))
+                throw new FileNotFoundException("ไม่พบไฟล์ข้อมูลผู้เล่น");
+
+            string[] lines = File.ReadAllLines(filePath);
+
+            string name = "";
+            int score = 0;
+            int level = 0;
+
+
+
+            foreach (string line in lines)
+            {
+                string[] parts = line.Split('=');
+                if (parts.Length != 2)
+                    throw new FormatException(
+                                  "รูปแบบข้อมูลในไฟล์ไม่ถูกต้อง");
+
+                switch (parts[0])
+                {
+                    case "Name": name = parts[1]; break;
+                    case "Score": score = int.Parse(parts[1]); break;
+                    case "Level": level = int.Parse(parts[1]); break;
+                }
+            }
+
+            return new PlayerData(name, score, level);
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError("ไม่สามารถโหลดไฟล์ได้: " + ex.Message);
+            return null;
+        }
+        finally
+        {
+            Debug.Log("คำสั่ง LoadPlayer สิ้นสุดการทำงาน");
+        }
+    }
+}
