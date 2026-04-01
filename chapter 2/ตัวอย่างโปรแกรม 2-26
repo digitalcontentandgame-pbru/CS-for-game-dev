@@ -1,0 +1,69 @@
+using System;
+using UnityEngine; // หากใช้ใน Unity
+
+public class DataConversionExample : MonoBehaviour
+{
+    void Start()
+    {  
+
+
+// ตัวอย่างการแปลงค่าที่ถูกต้อง (Successful Conversion)
+        string intString = "12345";
+        string doubleString = "98.76";
+
+        // 1. Convert
+        int convertedInt = Convert.ToInt32(intString);
+        double convertedDouble=Convert.ToDouble(doubleString);
+        
+        Debug.Log(
+            $"Convert.ToInt32(\"{intString}\"): {convertedInt}"
+        );
+
+
+        Debug.Log(
+     $"Convert.ToDouble(\"{doubleString}\"): {convertedDouble}"
+        ); 
+
+        // 2. Parse
+        int parsedInt = int.Parse(intString);
+        double parsedDouble = double.Parse(doubleString);
+        
+        Debug.Log($"int.Parse(\"{intString}\"): {parsedInt}");
+        Debug.Log(
+            $"double.Parse(\"{doubleString}\"): {parsedDouble}"
+        );
+
+// การจัดการค่า Null (Handling Null Input)
+        string nullString = null;
+
+        // 1. Convert (ปลอดภัยกว่าสำหรับ Null)
+        int convertNullInt = Convert.ToInt32(nullString);
+        double convertNullDouble=Convert.ToDouble(nullString);
+        
+        Debug.Log($"Convert.ToInt32(null): {convertNullInt}"); 
+        Debug.Log(
+            $"Convert.ToDouble(null): {convertNullDouble}"
+        ); 
+
+        // 2. Parse (จะเกิด ArgumentNullException)
+// หากรันบรรทัดนี้จะเกิด Exception
+// int parseNullInt = int.Parse(nullString); 
+// Debug.Log(
+// $"int.Parse(null): will throw ArgumentNullException"); 
+
+// การจัดการ Format ไม่ถูกต้อง (Handling Format Exception)
+        string badFormatString = "123A"; 
+
+        try
+        {
+// เมท็อด Parse และ Convert จะโยน FormatException เมื่อสตริงไม่ถูกต้อง
+            int.Parse(badFormatString); 
+        }
+        catch (FormatException ex)
+        {
+            Debug.LogError(
+     $"Conversion error: {badFormatString} (FormatException)"
+             );
+        }
+    }
+}
