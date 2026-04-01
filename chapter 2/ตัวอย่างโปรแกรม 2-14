@@ -1,0 +1,6 @@
+string userName = null;
+
+if (userName == null)
+{
+    Debug.Log("userName เป็น Null");
+}
