@@ -1,0 +1,32 @@
+using UnityEngine;
+
+public class InventoryTest : MonoBehaviour
+{
+    void Start()
+    {
+        // สร้างคลังไอเทมขนาด 10 ช่อง
+        Inventory inventory = new Inventory(capacity: 10);
+
+        // ดึงไอเทมจากฐานข้อมูล (Dictionary)
+        Item sword = ItemDatabase.GetItemById(1);
+        Item potion = ItemDatabase.GetItemById(2);
+        Item armor = ItemDatabase.GetItemById(3);
+        Item herb  = ItemDatabase.GetItemById(4);
+
+        // เพิ่มไอเทมเข้าคลังด้วย List
+        inventory.AddItem(sword, 1);     // Iron Sword x1
+        inventory.AddItem(armor, 1);     // Leather Armor x1
+        inventory.AddItem(potion, 12); // Health Potion x12 จะถูกกระจายหลายช่อง
+        inventory.AddItem(herb, 25);     // Herb x25 → หลายช่องเช่นกัน
+
+        inventory.PrintInventory();
+
+        // ใช้ LINQ วิเคราะห์คลังไอเทม
+        InventoryAnalyzer analyzer = new InventoryAnalyzer(inventory);
+
+        analyzer.PrintAllPotions();
+        analyzer.PrintSortedByName();
+        analyzer.PrintTotalHerb();
+        analyzer.PrintSummaryByItemType();
+    }
+}
