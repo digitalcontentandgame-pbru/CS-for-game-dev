@@ -1,0 +1,53 @@
+using UnityEngine;
+
+public class FactorialRecursion : MonoBehaviour
+{
+    // ตัวแปร public เพื่อรับค่า N จาก Unity Inspector
+    [Tooltip("ค่า N ที่ต้องการคำนวณ Factorial (ควรเป็นจำนวนเต็มบวก)")]
+    public int numberN = 5;
+
+    void Start()
+    {
+        if (numberN < 0)
+        {
+            Debug.LogError("Factorial ไม่ถูกกำหนดสำหรับจำนวนเต็มลบ");
+            return;
+        }
+
+        Debug.Log($"--- เริ่มคำนวณ {numberN}! ด้วย Recursion ---");
+        
+        // เรียกใช้เมท็อด Factorial
+        int result = Factorial(numberN);
+        
+        Debug.Log($"ผลลัพธ์ของ {numberN}! คือ: {result}");
+    }
+
+    // เมท็อด Factorial: คำนวณค่า Factorial ของ n โดยใช้ Recursion
+    private int Factorial(int n)
+    {
+        // เงื่อนไขการยุติ (Base Case): เมื่อ n เป็น 0 หรือ 1 ค่า Factorial คือ 1
+        if (n <= 1)
+        {
+            Debug.Log(
+               $"[Recursion Base Case] ถึง n = {n}, ส่งกลับค่า 1"
+            );
+            return 1; // เงื่อนไขการยุติ
+        }
+
+
+
+        else
+        {
+// การเรียกตัวเอง (Recursive Step): n * Factorial(n - 1)
+// โปรแกรมจะรอให้ Factorial(n - 1) คำนวณเสร็จก่อน
+            Debug.Log(
+$"[Recursive Step] กำลังคำนวณ {n} * Factorial({n - 1})"
+            );
+            int result = n * Factorial(n - 1);
+            Debug.Log(
+$"[Unwinding] Factorial({n}) คำนวณเสร็จสิ้น ได้ผลลัพธ์: {result}"
+            );
+            return result;
+        }
+    }
+}
