@@ -1,0 +1,2 @@
+string input = "   Hello   ";
+string trimmedInput = input.Trim(); // ผลลัพธ์: "Hello"
