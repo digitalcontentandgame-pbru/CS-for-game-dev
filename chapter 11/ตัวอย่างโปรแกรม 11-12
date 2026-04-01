@@ -1,0 +1,44 @@
+using UnityEngine;
+
+public abstract class Creature
+{
+    public string Name { get; protected set; }
+    public int MaxHP { get; protected set; }
+    public int HP { get; protected set; }
+    public int BaseAttack { get; protected set; }
+    public int BaseDefense { get; protected set; }
+
+    public Weapon Weapon { get; protected set; }
+    public Armor Armor { get; protected set; }
+
+    public Creature(string name, int maxHP, int baseAttack, 
+                    int baseDefense,
+                    Weapon weapon, Armor armor)
+    {
+        Name = name;
+        MaxHP = maxHP;
+        HP = maxHP;
+        BaseAttack = baseAttack;
+        BaseDefense = baseDefense;
+        Weapon = weapon;
+        Armor = armor;
+    }
+
+    public virtual void Attack(Creature target)
+    {
+        int totalAttack = BaseAttack + (Weapon?.AttackBonus??0);
+        int totalDefense = target.BaseDefense +
+                           (target.Armor?.DefenseBonus ?? 0);
+
+        int damage = totalAttack - totalDefense;
+        if (damage < 1) damage = 1;
+
+        target.HP -= damage;
+        Debug.Log(
+$"{Name} โจมตี {target.Name} สร้างความเสียหาย {damage} "+
+$"(HP เหลือ {target.HP})"
+        );
+    }
+
+    public bool IsDead => HP <= 0;
+}
