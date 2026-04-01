@@ -1,0 +1,47 @@
+using UnityEngine;
+
+public class CircleAreaCalculator : MonoBehaviour
+{
+    [Header("การกำหนดค่าวงกลม")]
+
+// ใช้ [SerializeField] เพื่อทำให้ตัวแปร private สามารถแก้ไขได้ใน 
+// Inspector
+    [SerializeField]
+    private float radius = 5.0f; 
+    private float areaResult;
+
+    void Start()
+    {
+        CalculateArea();
+    }
+
+    /// เมธอดสำหรับคำนวณพื้นที่ของวงกลม (Area = π * r^2)
+    private void CalculateArea()
+    {
+// 1. ตรวจสอบค่ารัศมี
+        if (radius <= 0)
+        {
+            Debug.LogError("Error: รัศมีที่ระบุต้องมีค่ามากกว่าศูนย์!");
+            return;
+        }
+// 2. การคำนวณพื้นที่: ใช้ Mathf.PI ซึ่งเป็นค่าคงที่ของ Pi ใน Unity (float)
+        areaResult = Mathf.PI * radius * radius;
+
+// 3. การแสดงผลลัพธ์ (เทียบเท่า Console.WriteLine)
+// ใช้ String Interpolation ($) ในการจัดรูปแบบข้อความ
+        Debug.Log("--- ผลการคำนวณพื้นที่วงกลม ---");
+        Debug.Log($"รัศมีที่ใช้ในการคำนวณ (Radius) = {radius:F2}");
+        Debug.Log($"พื้นที่ของวงกลม (Area) = {areaResult:F4}"); 
+// :F4 คือการแสดงทศนิยม 4 ตำแหน่ง
+        Debug.Log("------------------------------------");
+    }
+
+// ตัวอย่างการเรียกใช้การคำนวณซ้ำเมื่อมีการเปลี่ยนแปลงค่าใน Inspector 
+// (ใช้สำหรับการดีบั๊ก)
+    private void OnValidate()
+    {
+// OnValidate ถูกเรียกเมื่อค่าใน Inspector ถูกเปลี่ยน (ใน Editor Mode 
+// เท่านั้น) ทำให้เห็นผลลัพธ์ทันทีที่เปลี่ยนค่ารัศมี
+        CalculateArea();
+    }
+}
