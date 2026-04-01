@@ -1,0 +1,72 @@
+using UnityEngine;
+
+public class AccessModifiersExample : MonoBehaviour
+{
+// --- 1. Public Field ---
+
+// สามารถเข้าถึงและแก้ไขได้จากทุกที่ (รวมถึง Inspector และสคริปต์อื่น)
+    public int publicHealth = 100;
+    
+// --- 2. Private Field + [SerializeField] ---
+// ไม่สามารถเข้าถึงจากสคริปต์อื่นได้ แต่แสดงและแก้ไขได้ใน Inspector
+    [SerializeField] 
+    private float moveSpeed = 5.0f;
+
+    // --- 3. Private Field (ซ่อนจากทุกที่) ---
+    // เข้าถึงได้เฉพาะภายในคลาสนี้เท่านั้น ไม่แสดงใน Inspector
+    private bool isDead = false;
+
+    // --- 4. Protected Field (สำหรับสาธิตในคลาสลูก) ---
+    protected string uniqueID = "ABC-123";
+
+
+    void Start()
+    {
+        // ภายในคลาสเดียวกัน: สามารถเข้าถึงได้ทุกตัว
+        Debug.Log("--- ภายในคลาส AccessModifiersExample ---");
+        Debug.Log(
+$"Health: {publicHealth}, Speed: {moveSpeed}, "+
+$"IsDead: {isDead}, ID: {uniqueID}"
+         );
+
+        // เรียกเมท็อดที่สามารถเข้าถึงได้จากภายนอก
+        InitiateCombat(15);
+    }
+
+// เมท็อด Public: สามารถถูกเรียกจากสคริปต์อื่นได้
+    public void InitiateCombat(int damage)
+    {
+        // สามารถลดค่า publicHealth ได้อย่างง่ายดาย
+        publicHealth -= damage;
+        Debug.Log(
+$"[Public Method] ได้รับความเสียหาย {damage}. HP เหลือ {publicHealth}"
+        );
+    }
+
+// เมท็อด Private: ใช้สำหรับการทำงานภายในเท่านั้น ไม่สามารถเรียกจากสคริปต์อื่นได้
+    private void CheckDeath()
+    {
+        if (publicHealth <= 0)
+        {
+            isDead = true;
+            Debug.Log(
+"ตัวละครตายแล้ว (isDead ถูกตั้งค่าโดยเมท็อด private)"
+            );
+        }
+    }
+}
+
+// คลาสตัวอย่างที่สืบทอด (Inheritance) เพื่อสาธิต Protected
+public class DerivedEnemy : AccessModifiersExample
+{
+    public void DisplayParentID()
+    {
+        Debug.Log("--- ภายในคลาส DerivedEnemy (คลาสลูก) ---");
+        // สามารถเข้าถึง 'uniqueID' ที่เป็น protected ของคลาสแม่ได้
+        Debug.Log($"เข้าถึง Protected ID ของคลาสแม่: {uniqueID}"); 
+
+        // ไม่สามารถเข้าถึง moveSpeed (private) ของคลาสแม่ได้โดยตรง
+        // แต่สามารถเรียก InitiateCombat (public) ได้
+        base.InitiateCombat(5);
+    }
+}
