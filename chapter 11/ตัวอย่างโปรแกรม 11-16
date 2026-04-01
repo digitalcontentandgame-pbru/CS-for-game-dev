@@ -1,0 +1,259 @@
+using UnityEngine;
+using System;
+using Random = UnityEngine.Random;
+
+// คลาสข้อมูล 1: Equipment (อาวุธและเครื่องป้องกัน)
+
+public class Equipment
+{
+    public string Name { get; private set; }
+    public int AttackBonus { get; private set; }
+    public int DefenseBonus { get; private set; }
+
+    // Constructor: กำหนดคุณสมบัติของอุปกรณ์
+    public Equipment(string name, int atk, int def)
+    {
+        this.Name = name;
+        this.AttackBonus = atk;
+        this.DefenseBonus = def;
+    }
+}
+
+// คลาสแม่ 2: Character (สิ่งมีชีวิตพื้นฐาน)
+public class Character
+{
+    // Protected Fields: เข้าถึงได้เฉพาะคลาสลูกและตัวมันเอง
+    protected float baseMaxHealth;
+    protected float baseAttack;
+    protected float baseDefense;
+
+    // Public Properties: สถานะที่รวมผลจากอุปกรณ์
+    public string Name { get; private set; }
+    public float CurrentHealth { get; protected set; }
+    public bool IsAlive => CurrentHealth > 0;
+
+    // Equipment (อุปกรณ์)
+    public Equipment Weapon { get; private set; }
+    public Equipment Armor { get; private set; }
+
+    // Protected Constructor: คลาสนี้ถูกสร้างขึ้นเพื่อสืบทอดเท่านั้น
+    public Character(string name, float maxHP, 
+                     float atk, float def)
+    {
+        this.Name = name;
+        this.baseMaxHealth = maxHP;
+        this.CurrentHealth = maxHP;
+        this.baseAttack = atk;
+        this.baseDefense = def;
+    }
+
+    // เมท็อดคำนวณพลังโจมตีรวม (Public)
+    public float GetTotalAttackPower()
+    {
+        float totalAttack = baseAttack + 
+                            (Weapon?.AttackBonus ?? 0);
+        // เพิ่มความผันผวนเล็กน้อย 
+        return totalAttack * Random.Range(0.9f, 1.1f);
+    }
+    
+    // เมท็อดคำนวณพลังป้องกันรวม (Public)
+    public float GetTotalDefenseRating()
+    {
+        return baseDefense + (Armor?.DefenseBonus ?? 0);
+    }
+
+// Virtual Method: ให้คลาสลูก Overrride เพื่อให้มีรูปแบบการโจมตีที่ต่างกัน
+    public virtual void Attack(Character target)
+    {
+        float attackPower = GetTotalAttackPower();
+        float defenseRating = target.GetTotalDefenseRating();
+        
+        // สูตรคำนวณความเสียหาย: พลังโจมตี - พลังป้องกัน (ขั้นต่ำ 1)
+        float damage = Mathf.Max(1f,
+                                 attackPower–defenseRating);
+        
+        target.TakeDamage(damage);
+        Debug.Log(
+$"[{Name}] โจมตี [{target.Name}] ด้วยพลังโจมตี {attackPower:F1}"+
+$" และสร้างความเสียหาย {damage:F1}!"
+        );
+    }
+
+    // Public Method: ระบบรับความเสียหาย
+    public void TakeDamage(float damage)
+    {
+        CurrentHealth -= damage;
+        if (CurrentHealth < 0)
+        {
+            CurrentHealth = 0;
+        }
+
+        if (!IsAlive)
+        {
+            Debug.Log($"☠️ {Name} ถูกกำจัดแล้ว!");
+        }
+    }
+    
+    // Public Method: สำหรับการสวมใส่อุปกรณ์
+    public void Equip(Equipment weapon, Equipment armor)
+    {
+        this.Weapon = weapon;
+        this.Armor = armor;
+
+        Debug.Log(
+$"[{Name}] สวมใส่อาวุธ: {weapon.Name} และเกราะ: {armor.Name}"
+        );
+    }
+}
+
+// -------------------------------------------------------------
+// คลาสลูก 3: Rogue (ผู้เล่น)
+// -------------------------------------------------------------
+public class Rogue : Character
+{
+// Rogue: HP ต่ำ, ATK สูง
+    public Rogue(string name) : 
+        base(name, maxHP: 80f, atk: 25f, def: 5f) 
+    {
+    }
+
+    // Override Method: การโจมตีพิเศษของ Rogue (เน้น Critical Hit)
+    public override void Attack(Character target)
+    {
+        float attackPower = GetTotalAttackPower();
+        float defenseRating = target.GetTotalDefenseRating();
+        float damage;
+        
+        // โอกาส Critical Hit 20%
+        if (Random.value < 0.2f)
+        {
+// Critical x1.5
+            damage = Mathf.Max(1f, 
+                            attackPower * 1.5f - defenseRating); 
+            Debug.Log(
+$"!!! [{Name}] โจมตีแบบ Critical Hit ด้วย {Weapon.Name}"+
+$" สร้างความเสียหาย {damage:F1}!"
+            );
+        }
+        else
+        {
+            damage = Mathf.Max(1f, attackPower - defenseRating);
+            Debug.Log(
+$"[{Name}] โจมตีเป้าหมาย [{target.Name}]"+
+$" สร้างความเสียหาย {damage:F1}!"
+            );
+        }
+        
+        target.TakeDamage(damage);
+    }
+}
+
+// คลาสลูก 4: Slime (ศัตรู)
+public class Slime : Character
+{
+// Slime: HP สูง, ATK ต่ำ, DEF ปานกลาง
+    public Slime(string name) : 
+        base(name, maxHP: 120f, atk: 15f, def: 10f) 
+    {
+    }
+
+    // Override Method: การโจมตีแบบพื้นฐานของ Slime
+    public override void Attack(Character target)
+    {
+// Slime โจมตีแบบสุ่ม
+        float damage = Mathf.Max(1f, 
+                        baseAttack * Random.Range(0.8f, 1.2f)); 
+        target.TakeDamage(damage);
+        Debug.Log(
+$"[{Name}] สาดเมือกใส่ [{target.Name}] สร้างความเสียหาย {damage:F1}!"
+        );
+    }
+}
+
+// คลาสสำหรับรันการจำลอง (MonoBehaviour)
+public class TurnBasedCombatRunner : MonoBehaviour
+{
+    void Start()
+    {
+        // 1. สร้างอุปกรณ์
+        Equipment dagger = new Equipment(
+                               "Shadow Dagger", 15, 0);
+        Equipment leatherArmor = new Equipment(
+                               "Leather Vest", 0, 10);
+        Equipment slimeArmor = new Equipment(
+                               "Thick Slime", 0, 5);
+        
+        // 2. สร้างตัวละคร (อ็อบเจกต์)
+        Rogue player = new Rogue("Kael");
+        Slime enemy = new Slime("Gobbert");
+
+        // 3. สวมใส่อุปกรณ์
+        player.Equip(dagger, leatherArmor);
+        // Slime ไม่ใช้อาวุธภายนอก แต่มีเกราะจากธรรมชาติ
+        enemy.Equip(new Equipment(
+                        "Slime Attack", 0, 0), slimeArmor); 
+
+        Debug.Log("\n====================================");
+        Debug.Log("!!! เริ่มต้นการต่อสู้แบบ Turn-Base !!!");
+        Debug.Log(
+$"ผู้เล่น: {player.Name} (HP: {player.CurrentHealth}) vs"+
+$" ศัตรู: {enemy.Name} (HP: {enemy.CurrentHealth})"
+        );
+        Debug.Log("====================================");
+
+        int turn = 1;
+
+        // 4. วงจรการต่อสู้ (Turn Loop)
+        while (player.IsAlive && enemy.IsAlive)
+        {
+            Debug.Log($"\n--- เทิร์นที่ {turn} ---");
+
+            // --- เทิร์นผู้เล่น ---
+            if (player.IsAlive)
+            {
+                player.Attack(enemy);
+            }
+            
+            // ตรวจสอบสถานะหลังผู้เล่นโจมตี
+            if (!enemy.IsAlive) break; 
+            
+            // --- เทิร์นศัตรู ---
+            if (enemy.IsAlive)
+            {
+                enemy.Attack(player);
+            }
+
+            turn++;
+            
+            // เพื่อป้องกัน Infinite Loop ในกรณีเกิดข้อผิดพลาด
+            if (turn > 50) 
+            {
+                Debug.LogWarning(
+"การต่อสู้ยืดเยื้อเกินไป (50 เทิร์น) สิ้นสุดการจำลอง"
+                       );
+                break;
+            }
+        }
+
+        // 5. สรุปผล
+        Debug.Log("\n====================================");
+        if (player.IsAlive)
+        {
+            Debug.Log(
+$"^_^ ผู้เล่น {player.Name} ชนะการต่อสู้!"+
+$" HP เหลือ {player.CurrentHealth:F1}"
+            );
+        }
+        else if (enemy.IsAlive)
+        {
+            Debug.Log(
+$"T_T ผู้เล่น {player.Name} พ่ายแพ้ต่อ {enemy.Name}!"
+            );
+        }
+        else
+        {
+            Debug.Log("🏳️ เสมอกัน! ทั้งคู่ถูกกำจัดพร้อมกัน");
+        }
+        Debug.Log("====================================");
+    }
+}
