@@ -1,0 +1,4 @@
+if (password == string.Empty)
+{
+    Debug.Log("password is an Empty string");
+}
