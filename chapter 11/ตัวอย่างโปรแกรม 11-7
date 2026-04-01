@@ -1,0 +1,19 @@
+public class Enemy : Character
+{
+    public int ThreatLevel { get; private set; }
+
+    public Enemy(string name, int maxHP, int threatLevel)
+        : base(name, maxHP)
+    {
+        ThreatLevel = threatLevel;
+    }
+
+    public override void Attack(Character target)
+    {
+        int damage = UnityEngine.Random.Range(3, ThreatLevel + 5);
+        target.HP -= damage;
+        UnityEngine.Debug.Log(
+$"{Name} โจมตีผู้เล่น สร้างความเสียหาย {damage}"
+        );
+    }
+}
