@@ -1,0 +1,23 @@
+using UnityEngine;
+
+public class TestSaveLoad : MonoBehaviour
+{
+    void Start()
+    {
+        // ตัวอย่างข้อมูลผู้เล่น
+        PlayerData player = new PlayerData("Rogue", 1800, 5);
+
+        Debug.Log("=== ทดสอบบันทึกข้อมูล ===");
+        SaveLoadManager.SavePlayer(player);
+
+        Debug.Log("=== ทดสอบโหลดข้อมูล ===");
+        PlayerData loaded = SaveLoadManager.LoadPlayer();
+
+        if (loaded != null)
+        {
+            Debug.Log($"ชื่อผู้เล่น: {loaded.Name}");
+            Debug.Log($"คะแนน: {loaded.Score}");
+            Debug.Log($"เลเวล: {loaded.Level}");
+        }
+    }
+}
