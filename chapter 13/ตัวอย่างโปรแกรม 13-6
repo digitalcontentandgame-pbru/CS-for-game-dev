@@ -1,0 +1,48 @@
+public enum ItemType
+{
+    Weapon,
+    Armor,
+    Potion,
+    Material,
+    Misc
+}
+
+public class Item
+{
+    public int Id { get; private set; }
+    public string Name { get; private set; }
+    public ItemType Type { get; private set; }
+    public int MaxStack { get; private set; } // จำนวนซ้อนสูงสุด
+
+    public Item(int id, string name, ItemType type, int maxStack)
+    {
+        Id = id;
+        Name = name;
+        Type = type;
+        MaxStack = maxStack;
+    }
+}
+public class InventorySlot
+{
+    public Item Item { get; private set; }
+    public int Quantity { get; private set; }
+
+    public InventorySlot(Item item, int quantity)
+    {
+        Item = item;
+        Quantity = quantity;
+    }
+
+    public bool IsFull => Quantity >= Item.MaxStack;
+
+    public int RemainingSpace => Item.MaxStack - Quantity;
+
+    public void AddQuantity(int amount)
+    {
+        Quantity += amount;
+        if (Quantity > Item.MaxStack)
+        {
+            Quantity = Item.MaxStack;
+        }
+    }
+}
