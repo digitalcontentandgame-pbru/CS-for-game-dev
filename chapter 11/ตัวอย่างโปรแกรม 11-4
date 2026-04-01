@@ -1,0 +1,19 @@
+public class Warrior : Character
+{
+    public int Strength { get; private set; }
+
+    public Warrior(string name, int maxHP, int strength)
+        : base(name, maxHP)
+    {
+        Strength = strength;
+    }
+
+    public override void Attack(Character target)
+    {
+        int damage = Strength;
+        target.HP -= damage;
+        UnityEngine.Debug.Log(
+$"{Name} โจมตีแบบ Warrior สร้างความเสียหาย {damage}"
+        );
+    }
+}
