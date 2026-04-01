@@ -1,0 +1,54 @@
+using UnityEngine;
+using System;
+
+public class CalculatorClassExample : MonoBehaviour
+{
+    // สร้าง Instance ของคลาส Calculator 
+    private Calculator mathCalculator = new Calculator();
+
+    void Start()
+    {
+        Debug.Log("--- การสาธิต Method Overloading ---");
+
+        // 1. เรียกใช้ Add(int, int)
+        int resultInt = mathCalculator.Add(5, 10);
+        Debug.Log($"ผลรวมจำนวนเต็ม (5 + 10): {resultInt}");
+
+        // 2. เรียกใช้ Add(double, double)
+        double resultDouble = mathCalculator.Add(3.5, 2.7);
+        Debug.Log(
+$"ผลรวมทศนิยม (3.5 + 2.7): {resultDouble:F1}"
+        );
+
+        // 3. เรียกใช้ Add(int, int, int)
+        int resultThreeInt = mathCalculator.Add(1, 2, 3);
+        Debug.Log(
+$"ผลรวมจำนวนเต็มสามตัว (1 + 2 + 3): {resultThreeInt}"
+        );
+    }
+}
+
+/// คลาส Calculator ที่มีเมท็อด Add Overloaded
+public class Calculator
+{
+    // 1. Add(int a, int b): บวกจำนวนเต็มสองจำนวน
+    public int Add(int a, int b)
+    {
+        // การคำนวณพื้นฐาน
+        return a + b; 
+    }
+
+    // 2. Add(double a, double b): บวกจำนวนทศนิยมสองจำนวน
+    public double Add(double a, double b)
+    {
+        // เมท็อดนี้ทำงานกับชนิดข้อมูล double
+        return a + b;
+    }
+
+    // 3. Add(int a, int b, int c): บวกจำนวนเต็มสามจำนวน
+    public int Add(int a, int b, int c)
+    {
+        // เมท็อดนี้รับพารามิเตอร์สามตัว
+        return a + b + c;
+    }
+}
