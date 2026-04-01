@@ -1,0 +1,24 @@
+using UnityEngine;
+
+public class CalculateSumMethod : MonoBehaviour
+{
+    // ตัวแปร public float เพื่อรับค่าตัวเลขจาก Unity Inspector
+    [Tooltip("ค่า A สำหรับการคำนวณผลรวม")]
+    public float valueA = 5.0f; 
+    
+    [Tooltip("ค่า B สำหรับการคำนวณผลรวม")]
+    public float valueB = 10.0f; 
+
+    void Start()
+    {
+        CalculateSum(valueA, valueB);
+    }
+
+// เมท็อด CalculateSum(): ไม่มีค่าส่งกลับ (void)
+// มีหน้าที่คำนวณและแสดงผลรวมของตัวเลขสองตัว
+    private void CalculateSum(float a, float b)
+    {
+        float sum = a + b;
+        Debug.Log($"ผลรวมของ {a} และ {b} เท่ากับ {sum}");
+    }
+}
