@@ -1,0 +1,4 @@
+string s = "  Unity Example  ";
+string t = s.Trim();                    // "Unity Example"
+bool has = s.Contains("Unity");         // true
+string[] parts = s.Split(' ');          // แยกตามช่องว่าง
