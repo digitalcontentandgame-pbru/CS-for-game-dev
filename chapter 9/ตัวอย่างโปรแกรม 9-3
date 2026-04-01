@@ -1,0 +1,39 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class NewBehaviourScript : MonoBehaviour
+{
+    // ฟังก์ชันสุ่มค่าตัวเลขทศนิยมระหว่าง 0.00 - 1.00
+    double RandD()
+    {
+        var rnd = new System.Random();
+        return Convert.ToDouble(rnd.Next(101)) / 100.0;
+    }
+// สร้าง array 2 มิติขนาด 10x12
+    double[,] data = new double[10, 12]; 
+
+    void Start()
+    {
+        Debug.ClearDeveloperConsole(); // ล้างคอนโซลของ Unity
+        string msg = "";
+        
+        for (int r = 0; r <= data.GetUpperBound(0); r++)
+        {
+            for (int c = 0; c <= data.GetUpperBound(1); c++)
+            {
+                data[r, c] = RandD();
+                msg += $"{data[r, c]:0.00} ";
+            }
+            msg += "\n";
+        }
+
+        Debug.Log(msg); // แสดงค่าทั้งหมดในคอนโซล
+    }
+
+    void Update()
+    {
+        // ฟังก์ชันว่างสำหรับอัปเดตแต่ละเฟรม
+    }
+}
