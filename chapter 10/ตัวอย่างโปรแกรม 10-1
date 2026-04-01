@@ -1,0 +1,26 @@
+public class Item
+{
+    public string itemName;
+    public int itemID;
+    public bool isUsable;
+}
+
+public class InventoryManager : MonoBehaviour
+{
+    // Inventory: เก็บรายชื่อไอเทมทั้งหมดที่ผู้เล่นมี
+    private List<Item> inventoryItems = new List<Item>(); 
+
+    public void AddItem(Item newItem)
+    {
+        // การเพิ่มข้อมูล: เพิ่มไอเทมเข้าไปในคลัง
+        inventoryItems.Add(newItem);
+        Debug.Log("Added item: " + newItem.itemName);
+    }
+
+    public void RemoveItem(Item itemToRemove)
+    {
+        // การลบข้อมูล: ลบไอเทมออกจากคลัง
+        inventoryItems.Remove(itemToRemove);
+        Debug.Log("Removed item: " + itemToRemove.itemName);
+    }
+}
