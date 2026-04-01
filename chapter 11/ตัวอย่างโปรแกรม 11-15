@@ -1,0 +1,48 @@
+using UnityEngine;
+
+public class TurnBattle : MonoBehaviour
+{
+    void Start()
+    {
+        // อาวุธและเกราะของ Rogue
+        Weapon dagger = new Weapon("Dagger", attackBonus: 7);
+        Armor leather = new Armor("Leather Armor", 
+                                   defenseBonus: 3);
+
+        // Rogue Player
+        Rogue player = new Rogue("Rogue", dagger, leather);
+
+        // Slime Enemy
+        Slime slime = new Slime("Green Slime");
+
+        Debug.Log("=== เริ่มการต่อสู้แบบ Turn-Based ===");
+
+        bool playerTurn = true;
+
+        while (!player.IsDead && !slime.IsDead)
+        {
+            if (playerTurn)
+            {
+                Debug.Log("---- เทิร์นของ Rogue ----");
+                player.Attack(slime);
+            }
+            else
+            {
+                Debug.Log("---- เทิร์นของ Slime ----");
+                slime.Attack(player);
+            }
+
+            playerTurn = !playerTurn; // สลับเทิร์น
+        }
+
+        Debug.Log("=== ผลการต่อสู้ ===");
+        if (player.IsDead)
+        {
+            Debug.Log("Slime โชว์พลังเหนียวหนึบ ชนะผู้เล่น!");
+        }
+        else
+        {
+            Debug.Log("Rogue ชนะ! Slime กลายเป็นน้ำเหนียวบนพื้น");
+        }
+    }
+}
