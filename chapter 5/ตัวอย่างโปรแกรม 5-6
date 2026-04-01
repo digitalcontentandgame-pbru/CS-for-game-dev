@@ -1,0 +1,36 @@
+using UnityEngine;
+
+public class BreakExample : MonoBehaviour
+{
+    public float targetDistance = 10f;
+    // สมมติว่ามีอาร์เรย์ของระยะห่างศัตรู
+    public float[] enemyDistances = { 
+                       25.5f, 12.0f, 8.5f, 5.2f, 1.0f };
+
+    void Start()
+    {
+        FindClosestEnemyToAttack();
+    }
+
+    private void FindClosestEnemyToAttack()
+    {
+        for (int i = 0; i < enemyDistances.Length; i++)
+        {
+            float currentDistance = enemyDistances[i];
+            
+            Debug.Log(
+$"กำลังตรวจสอบศัตรูที่ {i}: ระยะห่าง {currentDistance:F1}m"
+            );
+            
+            if (currentDistance <= targetDistance)
+            {
+                Debug.Log(
+$"!!! พบศัตรูในระยะโจมตีที่ดัชนี {i} (ระยะห่าง {currentDistance:F1}m)"
+                );
+                // ยุติการวนซ้ำทันที เพราะพบเป้าหมายแล้ว
+                break; 
+            }
+        }
+        Debug.Log("สิ้นสุดการค้นหา.");
+    }
+}
