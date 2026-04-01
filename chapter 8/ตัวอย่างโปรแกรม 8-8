@@ -1,0 +1,44 @@
+using UnityEngine;
+using UnityEngine.UI; // สำหรับการเข้าถึง Text Component
+
+public class DisplayScore : MonoBehaviour
+{
+    // ตัวแปรสำหรับอ้างอิง Text Component
+    private Text scoreText;
+
+    private void Awake()
+    {
+        scoreText = GetComponent<Text>();
+    }
+
+    private void Start()
+    {
+// **การลงทะเบียน (Subscription)**: ลงทะเบียนเมธอดเพื่อตอบสนองต่อ Event
+        ScoreManager.OnScoreChanged += UpdateScoreDisplay;
+        
+        // กำหนดค่าเริ่มต้น
+        UpdateScoreDisplay(0); 
+    }
+
+
+
+
+    private void UpdateScoreDisplay(int score)
+    {
+        scoreText.text = "Score: " + score.ToString();
+    }
+
+    // ************ การควบคุมพฤติกรรมเมื่อถูกทำลาย ************
+    private void OnDestroy()
+    {
+        // **การยกเลิกการลงทะเบียน (Unsubscription)**: 
+        // ต้องยกเลิกการลงทะเบียน Event ที่เคยทำไว้ใน Start()
+        // เพื่อให้แน่ใจว่า เมื่อ GameObject ที่มีสคริปต์นี้ถูกทำลายแล้ว 
+        // ScoreManager จะไม่พยายามเรียกใช้เมธอด UpdateScoreDisplay 
+        // ซึ่งจะนำไปสู่ข้อผิดพลาด (NullReferenceException)
+        ScoreManager.OnScoreChanged -= UpdateScoreDisplay;
+        Debug.Log(
+"DisplayScore object has unsubscribed and is being destroyed."
+        );
+    }
+}
