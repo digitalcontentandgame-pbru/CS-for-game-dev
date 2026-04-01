@@ -1,0 +1,17 @@
+public static class ScoreManager
+{
+    // กำหนด Delegate สำหรับ Event
+    public delegate void ScoreChangeHandler(int newScore);
+    
+    // Static Event ที่สคริปต์อื่นจะลงทะเบียน
+    public static event ScoreChangeHandler OnScoreChanged;
+
+    private static int currentScore = 0;
+
+    public static void AddScore(int amount)
+    {
+        currentScore += amount;
+        // เรียกใช้ Event เพื่อแจ้งเตือนทุกสคริปต์ที่ลงทะเบียน
+        OnScoreChanged?.Invoke(currentScore);
+    }
+}
