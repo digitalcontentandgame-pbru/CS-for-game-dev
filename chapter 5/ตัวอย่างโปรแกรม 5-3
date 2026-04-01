@@ -1,0 +1,26 @@
+using UnityEngine;
+
+public class InputValidator : MonoBehaviour
+{
+    private bool isValidInput = false;
+    public void GetValidPlayerInput()
+    {
+        // รับประกันว่าโค้ดรับอินพุตจะทำงานอย่างน้อย 1 ครั้ง
+        do
+        {
+            // สมมติว่าเป็นการรับค่าจาก UI Input Field
+            // string input = GetInputFromUI();
+            string input = "A"; // ตัวอย่างอินพุตที่ไม่ถูกต้องครั้งแรก
+            
+            if (input == "Start")
+            {
+                isValidInput = true;
+                Debug.Log("อินพุตถูกต้อง: เริ่มเกม");
+            }
+            else
+            {
+                Debug.LogWarning("อินพุตไม่ถูกต้อง: ลองอีกครั้ง");
+            }
+        } while (!isValidInput); // วนซ้ำตราบใดที่อินพุตยังไม่ถูกต้อง
+    }
+}
