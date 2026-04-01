@@ -1,0 +1,41 @@
+using UnityEngine;
+
+public class PassByValueExample : MonoBehaviour
+{
+    // ตัวแปร public เพื่อให้เห็นค่าเริ่มต้นใน Unity Inspector
+    [Tooltip("ค่าเริ่มต้น X")]
+    public int x = 5; 
+    [Tooltip("ค่าเริ่มต้น Y")]
+    public int y = 10; 
+
+    void Start()
+    {
+        Debug.Log($"ค่าก่อนเรียก Swap: x = {x}, y = {y}");
+
+        // เรียกใช้เมท็อด Swap
+        // มีการส่งสำเนา (Copy) ของค่า x และ y ไปให้เมท็อด Swap
+        Swap(x, y);
+
+        // แสดงผลลัพธ์หลังการเรียกเมท็อด
+        // ค่าของ x และ y จะยังคงเป็น 5 และ 10 ตามลำดับ
+        Debug.Log(
+           $"ค่าหลังเรียก Swap (Pass by Value): x = {x}, y = {y}"
+        );
+        Debug.Log(
+"!!! หมายเหตุ: ค่าของ x และ y ไม่เปลี่ยน เนื่องจากเมท็อด Swap ทำงานกับสำเนาของค่าเท่านั้น"
+           );
+    }
+
+// เมท็อด Swap(): พยายามแลกเปลี่ยนค่า แต่ใช้การส่งผ่านแบบค่า (Pass by Value)
+    private void Swap(int a, int b)
+    {
+        int temp = a;
+        a = b;
+        b = temp;
+        
+        // ค่า a และ b ถูกแลกเปลี่ยนเฉพาะภายในขอบเขตของเมท็อดนี้
+        Debug.Log(
+$"[ภายในเมท็อด Swap] ค่าถูกแลกเปลี่ยน: a = {a}, b = {b}"
+        );
+    }
+}
