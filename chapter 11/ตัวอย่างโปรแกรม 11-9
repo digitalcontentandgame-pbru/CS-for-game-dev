@@ -1,0 +1,192 @@
+using UnityEngine;
+
+// คลาสที่ 1: WeaponData (พิมพ์เขียวไอเทม/กระสุน)
+// สาธิตการใช้ Constructor เพื่อกำหนดคุณสมบัติเฉพาะตัว
+public class WeaponData
+{
+    // Public Field: ชื่ออาวุธ (เข้าถึงได้จากทุกที่)
+    public string weaponName;
+    
+    // Protected Field: ค่าความเสียหายพื้นฐาน (เข้าถึงได้จากคลาสที่สืบทอด)
+    protected int baseDamage;
+    
+    // Private Field: ID ภายใน (ซ่อนจากภายนอก)
+    private readonly int itemID;
+
+    // Constructor: กำหนดค่าเริ่มต้นเมื่อสร้าง Object ใหม่
+    public WeaponData(string name, int damage, int id)
+    {
+        this.weaponName = name;
+        this.baseDamage = damage;
+        this.itemID = id;
+    }
+
+    // Public Method: ใช้ในการดึงค่าความเสียหาย
+    public int GetDamage()
+    {
+        return baseDamage;
+    }
+}
+
+// คลาสที่ 2: Actor (คลาสแม่สำหรับตัวละครทุกชนิด)
+// สาธิตการใช้ Inheritance และ Virtual Method
+public class Actor
+{
+// Public Field: ชื่อตัวละคร
+    public string actorName;
+    
+// Protected Field: สถานะสุขภาพปัจจุบัน (HP) 
+// คลาสลูกเท่านั้นที่ควรเข้าถึงโดยตรง
+    protected float currentHealth; 
+    
+    // Private Field: สถานะซ่อนเร้น
+    private bool isAlive = true;
+
+    // Public Property: สำหรับการอ่านค่า HP สูงสุด (MaxHP)
+  // และใช้ protected set ให้คลาสลูกตั้งค่าได้
+    public float MaxHealth { get; protected set; } = 100f; 
+
+    // Constructor ของคลาสแม่
+    public Actor(string name)
+    {
+        this.actorName = name;
+        this.currentHealth = MaxHealth;
+        Debug.Log(
+$"[Actor Created] {actorName} (HP: {currentHealth})"
+        );
+    }
+
+    // Virtual Method: เมธอดที่คาดหวังว่าคลาสลูกจะทำการ Override
+    public virtual void Attack(Actor target)
+    {
+        Debug.Log(
+$"[{actorName}] โจมตีเป้าหมาย {target.actorName} ด้วยท่าทางมาตรฐาน"
+           );
+    }
+
+    // Public Method: ระบบรับความเสียหาย
+    public void TakeDamage(float damage)
+    {
+        if (!isAlive) return;
+
+        currentHealth -= damage;
+        Debug.Log(
+$"[{actorName}] ได้รับความเสียหาย {damage}. "+
+$"HP เหลือ {currentHealth:F1}"
+        );
+
+        if (currentHealth <= 0)
+        {
+            Die();
+        }
+    }
+
+    // Private Method: ซ่อนลอจิกการตาย
+    private void Die()
+    {
+        isAlive = false;
+        Debug.Log($"💀 {actorName} ถูกกำจัดแล้ว! 💀");
+    }
+}
+
+// คลาสที่ 3: Player (คลาสลูกสำหรับผู้เล่น)
+// สาธิตการ Override และ Polymorphism
+public class Player : Actor
+{
+    // Public Field สำหรับระบบอาชีพ
+    public string characterClass; 
+    
+    // อาวุธที่ผู้เล่นถืออยู่
+    private WeaponData equippedWeapon;
+
+// Constructor ของ Player: ต้องเรียก Constructor ของคลาสแม่ (base)
+    public Player(string name, string charClass, 
+                  WeaponData weapon) : base(name)
+    {
+        this.characterClass = charClass;
+        this.equippedWeapon = weapon;
+        
+// กำหนดค่า MaxHP และ HP เริ่มต้นตามอาชีพ (Overriding MaxHealth setter)
+        if (charClass == "Warrior")
+        {
+            this.MaxHealth = 150f;
+        }
+        else
+        {
+            this.MaxHealth = 100f;
+        }
+        this.currentHealth = MaxHealth;
+    }
+
+    // Override Method: การโจมตีรูปแบบเฉพาะของ Player
+    public override void Attack(Actor target)
+    {
+        int damage = equippedWeapon.GetDamage() +
+                      (characterClass == "Warrior" ? 10 : 0);
+        Debug.Log(
+$"[{actorName} ({characterClass})] โจมตีด้วย"+
+$" {equippedWeapon.weaponName} สร้างความเสียหาย {damage}!"
+        );
+        target.TakeDamage(damage);
+    }
+}
+
+// คลาสที่ 4: Enemy (คลาสลูกสำหรับศัตรู)
+// สาธิตการ Override และ Polymorphism
+public class Enemy : Actor
+{
+    public Enemy(string name) : base(name)
+    {
+        // กำหนด HP ให้ศัตรูแตกต่างจากผู้เล่น
+        this.MaxHealth = 75f;
+        this.currentHealth = MaxHealth;
+    }
+
+    // Override Method: การโจมตีรูปแบบเฉพาะของ Enemy
+    public override void Attack(Actor target)
+    {
+        int damage = 15;
+        Debug.Log(
+$"[{actorName} (Goblin)] ขว้างหินใส่ {target.actorName} "+
+$"สร้างความเสียหาย {damage}!"
+        );
+        target.TakeDamage(damage);
+    }
+}
+
+// คลาสสำหรับรันการจำลองใน Unity (MonoBehaviour)
+public class OopExampleRunner : MonoBehaviour
+{
+    void Start()
+    {
+// 1. สร้าง Object ของ WeaponData (Blueprint) โดยใช้ Constructor
+        WeaponData sword = new WeaponData(
+                                "Legendary Sword", 30, 101);
+        WeaponData staff = new WeaponData(
+                                "Magic Staff", 15, 102);
+
+// 2. สร้าง Object ของ Player และ Enemy โดยใช้ Constructor 
+// เฉพาะของคลาสลูก
+        Player warrior = new Player("Maximus", "Warrior",
+                                     sword);
+        Player mage = new Player("Elara", "Mage", staff);
+        Enemy goblin = new Enemy("Grong");
+
+        Debug.Log("\n--- จำลองระบบการต่อสู้ (Polymorphism) ---");
+
+        // 3. สาธิต Polymorphism: เมธอด Attack() ถูกเรียก แต่ลอจิกต่างกัน
+        
+        // Warrior โจมตี Goblin (ลอจิกของ Player Class)
+        warrior.Attack(goblin); 
+        
+        // Goblin โจมตี Warrior (ลอจิกของ Enemy Class)
+        goblin.Attack(warrior);
+
+        // Mage โจมตี Goblin
+        mage.Attack(goblin);
+
+        Debug.Log("\n--- สาธิตการสื่อสารและสถานะ ---");
+        // สคริปต์ภายนอกเรียก Public Method เพื่อลด HP
+        warrior.TakeDamage(120); 
+    }
+}
