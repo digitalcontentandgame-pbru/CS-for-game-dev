@@ -1,0 +1,36 @@
+using UnityEngine;  
+
+public class LegalAgeChecker : MonoBehaviour
+{
+    // ตัวแปร public เพื่อรับค่าอายุจาก Unity Inspector
+    [Tooltip("กรอกอายุที่ต้องการตรวจสอบ")]
+    public int age = 0; 
+    
+    // อายุที่ถือว่าบรรลุนิติภาวะ (ตามเงื่อนไขเดิมคือ 18)
+    private const int LegalAge = 18; 
+
+    void Start()
+    {
+        CheckLegalAge();
+    }
+
+    public void CheckLegalAge()
+    {
+        // ใช้โครงสร้าง if-else และตัวดำเนินการเปรียบเทียบ >=
+        if (age >= LegalAge)
+        {
+            // ใช้ Debug.Log แทน Console.WriteLine
+            Debug.Log(
+               $"You are of legal age (age: {age} years)"
+            );
+        }
+        else
+        {
+            // ใช้ Debug.Log แทน Console.WriteLine
+            Debug.Log(
+             $"You are not yet of legal age (age: {age} years)"
+            );
+        }
+    }
+}
+
