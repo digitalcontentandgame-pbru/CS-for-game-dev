@@ -1,0 +1,49 @@
+using UnityEngine;
+
+public class PlayerMovement : MonoBehaviour
+{
+    // ตัวแปรสำหรับเก็บการอ้างอิงไปยัง Rigidbody Component
+    private Rigidbody rb;
+    public float movementSpeed = 5f;
+
+    // ************ การควบคุมพฤติกรรมในขั้นตอนเริ่มต้น ************
+    private void Awake()
+    {
+
+        // 1. รับการอ้างอิง: นี่คือเวลาที่เหมาะสมที่สุดในการรับ Component
+        // เพื่อให้มั่นใจว่า rb จะไม่เป็น null ก่อน Start() หรือ Update() ถูกเรียก
+        rb = GetComponent<Rigidbody>(); 
+
+        // 2. การตรวจสอบ (Optional): เพื่อป้องกันข้อผิดพลาดหากไม่มี Rigidbody
+        if (rb == null)
+        {
+            Debug.LogError(
+"Rigidbody component is missing on the player GameObject!"
+            );
+        }
+        
+        Debug.Log(gameObject.name + 
+" Finished internal setup in Awake()."
+        );
+    }
+
+    private void Start()
+    {
+        // สามารถมั่นใจได้ว่าตัวแปร rb ได้รับค่ามาแล้วจาก Awake()
+        // เราสามารถใช้ rb เพื่อกำหนดค่าเริ่มต้นภายนอกได้ (เช่น ตั้งค่าข้อจำกัด)
+        if (rb != null)
+        {
+            rb.freezeRotation = true;
+        }
+    }
+    
+    private void FixedUpdate()
+    {
+        // ตรรกะการเคลื่อนที่ที่ใช้ Rigidbody จะทำงานได้อย่างปลอดภัย
+        if (rb != null)
+        {
+            // ตัวอย่าง: การเคลื่อนที่ด้วยฟิสิกส์
+            rb.MovePosition(rb.position + transform.forward * movementSpeed * Time.fixedDeltaTime);
+        }
+    }
+}
