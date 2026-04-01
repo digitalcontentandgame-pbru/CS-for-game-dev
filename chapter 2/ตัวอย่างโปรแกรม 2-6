@@ -1,0 +1,32 @@
+using UnityEngine;
+
+public class FloatingPointEpsilonDemo : MonoBehaviour
+{
+    // ค่าความคลาดเคลื่อน (epsilon) สำหรับ float
+    const float EPSILON = 0.000001f;
+
+    void Start()
+    {
+        float f = 0.1f;
+        double d = 0.1;
+
+        Debug.Log($"f = {f}");
+        Debug.Log($"d = {d}");
+
+        // แสดงผลเลขทศนิยมอย่างละเอียด 20 ตำแหน่ง
+        Debug.Log($"0.1 + 0.2 = {(0.1 + 0.2):F20}");
+        Debug.Log($"0.1f + 0.2f = {(0.1f + 0.2f):F20}");
+
+
+
+        // การเปรียบเทียบค่าทศนิยมแบบใช้ epsilon
+        if (Mathf.Abs(f - 0.1f) <= EPSILON)
+        {
+            Debug.Log("f is approximately 0.1");
+        }
+        else
+        {
+            Debug.Log("f is not approximately 0.1");
+        }
+    }
+}
