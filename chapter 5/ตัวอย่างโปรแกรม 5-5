@@ -1,0 +1,23 @@
+using System.Collections.Generic;
+using UnityEngine;
+
+public class MapGenerator : MonoBehaviour
+{
+    // ตัวอย่างรายการประเภทของช่องในแผนที่
+    public List<string> tiles = new List<string> { 
+                                   "Grass", "Water", "Rock", 
+                                   "Grass", "Water" 
+                                    };
+
+    public void GenerateMapTiles()
+    {
+        // วนซ้ำผ่านแต่ละ tile ในรายการ tiles
+        foreach (string tileType in tiles)
+        {
+
+// ทำการสร้าง GameObject ตามชนิดของช่อง
+// ตัวอย่าง: Instantiate(tilePrefabDictionary[tileType], ...);
+            Debug.Log($"สร้างช่องแผนที่ชนิด: {tileType}");
+        }
+    }
+}
