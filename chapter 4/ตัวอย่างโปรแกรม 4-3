@@ -1,0 +1,58 @@
+using UnityEngine;
+using System; // นำเข้า System เพื่อใช้ Math.Abs
+
+public class FloatComparisonExample : MonoBehaviour
+{
+    // ใช้ public const หรือ public readonly เพื่อให้ค่าคงที่ถูกมองเห็น
+    // ใน Unity เราสามารถใช้ค่าคงที่ภายในคลาสได้โดยไม่ต้องเป็น public
+    private const float Epsilon = 0.000001f; 
+
+    // ตัวแปร public เพื่อสาธิตค่า float ใน Inspector
+    [Tooltip("ค่าเริ่มต้น A")]
+    public float a = 0.1f;
+    
+
+    [Tooltip("ค่าเริ่มต้น B")]
+    public float b = 0.2f;
+    
+    // ค่าคงที่สำหรับเปรียบเทียบ
+    private const float TargetValue = 0.3f;
+
+    void Start()
+    {
+        PerformFloatComparison();
+    }
+
+    public void PerformFloatComparison()
+    {
+        // 1. การดำเนินการทางคณิตศาสตร์
+        float c = a + b;
+        
+        // 2. การแสดงผลลัพธ์ใน Unity Console
+        // ใช้การจัดรูปแบบ String Interpolation ($"...") เพื่อแสดงผลลัพธ์
+        Debug.Log($"a = {a}");
+        Debug.Log($"b = {b}");
+        // การแสดงค่า a + b มักจะแสดงค่าที่ไม่แม่นยำออกมา เช่น 0.30000004
+        Debug.Log($"a + b = {c}"); 
+
+        // 3. การเปรียบเทียบ float อย่างถูกต้อง (ใช้ Epsilon)
+        // เนื่องจาก float มีความแม่นยำจำกัด เราต้องตรวจสอบว่าผลต่างของ c กับ 0.3
+        // น้อยกว่าหรือเท่ากับค่า Epsilon (ขอบเขตความคลาดเคลื่อน) หรือไม่
+        
+        // ใช้ Math.Abs() เพื่อหาค่าสัมบูรณ์ของผลต่าง
+        // เงื่อนไขเดิม: (c - 0.3) < epsilon ซึ่งอาจไม่ครอบคลุมกรณีที่ c < 0.3
+        // เงื่อนไขที่ถูกต้อง: Math.Abs(c - 0.3) < epsilon
+        if (Math.Abs(c - TargetValue) < Epsilon)
+        {
+            Debug.Log(
+$"The difference is less than Epsilon: The result is {TargetValue}"
+            );
+        }
+        else
+        {
+            Debug.Log(
+$"The difference is greater than Epsilon: The result is ??? (The actual value is {c})"
+            );
+        }
+    }
+}
