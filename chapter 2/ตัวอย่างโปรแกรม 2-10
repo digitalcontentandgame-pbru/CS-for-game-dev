@@ -1,0 +1,5 @@
+string s1 = "Hello";
+string s2 = String.Empty;
+string s3 = null;
+string s4 = "Value: " + 42;          // Concatenation
+string s5 = $"Formatted: {3.1415:F2}"; // Interpolation
