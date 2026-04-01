@@ -1,0 +1,18 @@
+
+string data1 = null;
+string data2 = "";
+string data3 = "  \t  "; // มีแต่ Whitespace
+
+if (string.IsNullOrWhiteSpace(data1))
+{
+    Debug.Log("data1 failed validation");
+}
+if (string.IsNullOrWhiteSpace(data2))
+{
+    Debug.Log("data2 failed validation");
+}
+if (string.IsNullOrWhiteSpace(data3))
+{
+    Debug.Log("data3 failed validation");
+}
+
