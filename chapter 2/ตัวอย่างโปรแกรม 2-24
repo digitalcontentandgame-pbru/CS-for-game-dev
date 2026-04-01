@@ -1,0 +1,22 @@
+using UnityEngine;
+using System.Text;
+
+public class StringBuilderExample : MonoBehaviour
+{
+    StringBuilder sb = new StringBuilder();
+
+    void Update()
+    {
+        // ตัวอย่างสมมติ: สร้าง log ทุก 60 เฟรม
+        if (Time.frameCount % 60 == 0)
+        {
+            sb.Clear();
+            sb.Append("Frame=");
+            sb.Append(Time.frameCount);
+            sb.Append(", Pos=");
+            sb.Append(transform.position.x.ToString("F2"));
+            // ... เพิ่มข้อมูลอื่นๆ
+            Debug.Log(sb.ToString());
+        }
+    }
+}
